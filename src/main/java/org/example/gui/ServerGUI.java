@@ -3,11 +3,13 @@ package org.example.gui;
 import org.example.core.ServerListenerThread;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ServerGUI {
 
@@ -19,6 +21,11 @@ public class ServerGUI {
     private JList<String> activeUsersList;  // Danh sách các địa chỉ IP của các kết nối
     private DefaultListModel<String> listModel;  // Model để quản lý danh sách các kết nối
 
+    private JTextField inputField;  // Ô nhập
+    private JButton addButton;  // Nút thêm
+    private DefaultListModel<String> rightListModel;  // Model cho danh sách bên phải
+    private JList<String> blackList;  // Danh sách bên phải
+
     public ServerGUI(ServerListenerThread serverListener) {
 
         frame = new JFrame("HTTP Server Control Panel");
@@ -28,17 +35,30 @@ public class ServerGUI {
         logArea = new JTextArea(10, 30);
         logArea.setEditable(false);
         connectionCountLabel = new JLabel("Connections: 0");  // Bắt đầu với 0 kết nối
+        inputField = new JTextField(15); // Ô nhập và nút thêm
+        addButton = new JButton("Add on blacklist");
 
         listModel = new DefaultListModel<>();
         activeUsersList = new JList<>(listModel);  // Tạo JList để hiển thị các địa chỉ IP
+
+        rightListModel = new DefaultListModel<>();
+        blackList = new JList<>(rightListModel);  // Tạo JList cho danh sách bên phải
+
 
         JPanel panel = new JPanel();
         panel.add(startButton);
         panel.add(stopButton);
         panel.add(connectionCountLabel);
+        panel.add(Box.createRigidArea(new Dimension(15, 0)));
+        panel.add(inputField);
+        panel.add(addButton);
+
+
+
         frame.add(panel, "North");
-        frame.add(new JScrollPane(logArea), "Center");
-        frame.add(new JScrollPane(activeUsersList), "East");  // Đặt danh sách kết nối bên phải giao diện
+        frame.add(new JScrollPane(logArea), "West");
+        frame.add(new JScrollPane(activeUsersList), "Center");
+        frame.add(new JScrollPane(blackList), "East");
 
         startButton.addActionListener(new ActionListener() {
             @Override
@@ -62,6 +82,20 @@ public class ServerGUI {
             }
         });
 
+        // Thêm ActionListener cho nút thêm
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String inputText = inputField.getText();
+                if (!inputText.isEmpty()) {
+                    rightListModel.addElement(inputText);  // Thêm vào danh sách bên phải
+                    inputField.setText("");  // Xóa ô nhập
+                    Set<String> blackList = ServerListenerThread.setBlackList;
+                    blackList.add(inputText);
+                }
+            }
+        });
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setLocationRelativeTo(null);  // Đặt giao diện chính giữa màn hình
@@ -69,17 +103,14 @@ public class ServerGUI {
     }
 
     // Cập nhật số lượng kết nối
-    public void updateConnectionCount(int count) {
+    public void GUIupdateConnectionCount(int count) {
         SwingUtilities.invokeLater(() -> connectionCountLabel.setText("Connections: " + count));
     }
 
-    // Cập nhật danh sách các địa chỉ IP
-    public void addActiveUser(String ipandtime) {
+    // Cập nhật danh sách các địa chỉ IP và thời gian
+    public void GUIaddActiveUser(String ipandtime) {
         SwingUtilities.invokeLater(() -> listModel.addElement(ipandtime));
     }
 
-    // Xóa địa chỉ IP khỏi danh sách khi ngắt kết nối
-    public void removeActiveUser(String ipAddress) {
-        SwingUtilities.invokeLater(() -> listModel.removeElement(ipAddress));
-    }
+
 }

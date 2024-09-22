@@ -20,7 +20,8 @@ public class ServerListenerThread extends Thread{
     private ServerGUI gui;
 
     //set contains number connection of client
-    Set<InetAddress> set = new HashSet<>();
+    static  Set<InetAddress> set = new HashSet<>();
+    public static  Set<String> setBlackList = new HashSet<>();
     private Consumer<Integer> connectionCountCallback;  // Callback cho số lượng kết nối
     private Consumer<String> connectionListCallback;
 
@@ -39,29 +40,34 @@ public class ServerListenerThread extends Thread{
         this.connectionListCallback = connectionListCallback;
     }
 
+    public static Set<String> getBlackList() {
+        return setBlackList;
+    }
+
     @Override
     public void run() {
 
 
         try {
-
             while( serverSocket.isBound() && !serverSocket.isClosed() ){
-
                 Socket socket = serverSocket.accept();
+                String clientIp = socket.getInetAddress().getHostAddress();
+                if (setBlackList.contains(clientIp)) {
+                    socket.close(); // Đóng socket
+                    continue; // Bỏ qua kết nối
+                }
+
                 System.err.println("================>IP:    " + socket.getInetAddress().getHostAddress());
                 set.add(socket.getInetAddress());
-                updateConnectionCount(set.size());  // Cập nhật giao diện
-                updateConnectionList(socket.getInetAddress().getHostAddress()  + "       " + new FormatTime().getFormattedTime());
+
+                updateConnectionCount(set.size());  // Callback
+                updateConnectionList(socket.getInetAddress().getHostAddress() + "       " + new FormatTime().getFormattedTime()); // Callback
 
                 System.err.println("================>On time:    " + new FormatTime().getFormattedTime());
 
                 HttpConnectionWorkerThread  httpConnectionWorkerThread = new HttpConnectionWorkerThread(socket);
                 httpConnectionWorkerThread.start();
-
             }
-
-//            ;         Will TODO Handler
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }finally {

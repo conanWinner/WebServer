@@ -5,16 +5,17 @@ import org.example.pageResponseHTML.HTML;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
+
+import static org.example.core.ServerListenerThread.set;
 
 public class HttpConnectionWorkerThread extends Thread{
 
     private Socket socket;
 
     public HttpConnectionWorkerThread(Socket socket) {
-
         this.socket = socket;
-
     }
 
     @Override
@@ -24,14 +25,13 @@ public class HttpConnectionWorkerThread extends Thread{
         OutputStream os = null;
 
         try {
-
             is = socket.getInputStream();
             os = socket.getOutputStream();
 
             final String CODE_HTML = HTML.CODE_HTML;
             final String CRLF = "\r\n";
             final String HTTP_RESPONSE = "HTTP/1.1 200 OK" + CRLF + //starts line
-                    "Content-Type: text/html" + CRLF +   //
+                    "Content-Type: text/html" + CRLF +
                     "Content-Length:" + CODE_HTML.getBytes().length + CRLF +   //    header
                     CRLF +
                     CODE_HTML +

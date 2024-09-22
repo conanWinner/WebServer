@@ -22,8 +22,8 @@ public class HttpServer {
             ServerGUI serverGUI = new ServerGUI(serverListener);
 
             //update count client
-            serverListener.setConnectionCountCallback(serverGUI::updateConnectionCount);
-            serverListener.setConnectionListCallback(serverGUI::addActiveUser);
+            serverListener.setConnectionCountCallback(serverGUI::GUIupdateConnectionCount);
+            serverListener.setConnectionListCallback(serverGUI::GUIaddActiveUser);
 
 
         } catch (IOException e) {
