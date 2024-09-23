@@ -1,17 +1,16 @@
 package org.example.gui;
 
 import org.example.core.ServerListenerThread;
+import org.example.util.FormatTime;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class ServerGUI {
+    private Set<String> setBlackList = ServerListenerThread.setBlackList;
 
     private JFrame frame;
     private JButton startButton;
@@ -23,6 +22,7 @@ public class ServerGUI {
 
     private JTextField inputField;  // Ô nhập
     private JButton addButton;  // Nút thêm
+    private JButton removeButton;  // Nút xóa
     private DefaultListModel<String> rightListModel;  // Model cho danh sách bên phải
     private JList<String> blackList;  // Danh sách bên phải
 
@@ -34,9 +34,10 @@ public class ServerGUI {
         stopButton.setEnabled(false);
         logArea = new JTextArea(10, 30);
         logArea.setEditable(false);
-        connectionCountLabel = new JLabel("Connections: 0");  // Bắt đầu với 0 kết nối
+        connectionCountLabel = new JLabel("Connected: 0");  // Bắt đầu với 0 kết nối
         inputField = new JTextField(15); // Ô nhập và nút thêm
         addButton = new JButton("Add on blacklist");
+        removeButton = new JButton("Remove");
 
         listModel = new DefaultListModel<>();
         activeUsersList = new JList<>(listModel);  // Tạo JList để hiển thị các địa chỉ IP
@@ -52,7 +53,7 @@ public class ServerGUI {
         panel.add(Box.createRigidArea(new Dimension(15, 0)));
         panel.add(inputField);
         panel.add(addButton);
-
+        panel.add(removeButton);
 
 
         frame.add(panel, "North");
@@ -82,16 +83,33 @@ public class ServerGUI {
             }
         });
 
-        // Thêm ActionListener cho nút thêm
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String inputText = inputField.getText();
                 if (!inputText.isEmpty()) {
-                    rightListModel.addElement(inputText);  // Thêm vào danh sách bên phải
-                    inputField.setText("");  // Xóa ô nhập
-                    Set<String> blackList = ServerListenerThread.setBlackList;
-                    blackList.add(inputText);
+                    rightListModel.addElement(inputText + "   -   " + new FormatTime().getFormattedTime());
+                    inputField.setText("");
+                    setBlackList.add(inputText);
+                }
+            }
+        });
+
+        // Thêm ActionListener cho nút delete
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = blackList.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    String selectedValue = rightListModel.getElementAt(selectedIndex);
+                    rightListModel.remove(selectedIndex);
+
+                    System.out.println("selectedVAalue: " + selectedValue);
+                    String value = cutStringBySpace(selectedValue);
+
+                    setBlackList.remove(value);  // Xóa khỏi danh sách blacklist
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an item to delete.");
                 }
             }
         });
@@ -104,12 +122,18 @@ public class ServerGUI {
 
     // Cập nhật số lượng kết nối
     public void GUIupdateConnectionCount(int count) {
-        SwingUtilities.invokeLater(() -> connectionCountLabel.setText("Connections: " + count));
+        SwingUtilities.invokeLater(() -> connectionCountLabel.setText("Connected: " + count));
     }
 
     // Cập nhật danh sách các địa chỉ IP và thời gian
     public void GUIaddActiveUser(String ipandtime) {
         SwingUtilities.invokeLater(() -> listModel.addElement(ipandtime));
+    }
+
+    // Cắt chuỗi
+    private String cutStringBySpace(String str){
+        String result = str.split(" ")[0].trim();
+        return result;
     }
 
 
