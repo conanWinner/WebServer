@@ -1,7 +1,7 @@
-package org.example.core;
+package org.webserver.httpserver.core;
 
-import org.example.gui.ServerGUI;
-import org.example.util.FormatTime;
+import org.webserver.httpserver.gui.ServerGUI;
+import org.webserver.httpserver.util.FormatTime;
 
 import java.io.IOException;
 import java.net.InetAddress;

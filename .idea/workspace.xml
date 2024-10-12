@@ -5,9 +5,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9133bf40-c1ad-4576-9919-98e08dd4f95a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/WebRoot/favicon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/WebRoot/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/common/Constants.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/http/BadHttpVersionException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpMethod.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpParser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpParsingException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpStatusCode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpVersion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HandlerRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/io/WebRootHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/io/WebRootNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/entity/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/util/FileUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/webserver/http/HttpHeadersParserTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/webserver/http/HttpParserTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/webserver/http/HttpVersionTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/webserver/httpserver/core/HandlerRequestTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/webserver/httpserver/core/io/WebRootHandlerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/gui/ServerGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/gui/ServerGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Request.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Request.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/HttpServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/HttpServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/config/Configuration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/config/Configuration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/config/ConfigurationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/config/ConfigurationManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/config/HttpConfigurationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/config/HttpConfigurationException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/core/HttpConnectionWorkerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HttpConnectionWorkerThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/core/ServerListenerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/ServerListenerThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/gui/ServerGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/gui/ServerGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/pageResponseHTML/HTML.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/FormatTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/util/FormatTime.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/util/Json.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/util/Json.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/http.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/http.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,7 +50,11 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
+        <option value="Python Script" />
+        <option value="HTML File" />
         <option value="Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -40,12 +77,23 @@
   "keyToString": {
     "Application.HttpServer.executor": "Run",
     "Application.Main.executor": "Run",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "JUnit.HandlerRequestTest.executor": "Debug",
+    "JUnit.HttpHeadersParserTest.executor": "Run",
+    "JUnit.HttpParserTest.executor": "Debug",
+    "JUnit.HttpParserTest.parseHttpRequest.executor": "Run",
+    "JUnit.HttpVersionTest.executor": "Run",
+    "JUnit.WebRootHandlerTest.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "jdk.selected.JAVA_MODULE": "19",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Netbean-project/WebServer",
+    "last_opened_file_path": "D:/_DEV/Java/WebServer",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -58,13 +106,25 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="org.webserver.httpserver.core.io" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="org.webserver.httpserver.core" />
+      <recent name="org.webserver.http" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.HttpServer">
     <configuration name="HttpServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.example.HttpServer" />
+      <option name="MAIN_CLASS_NAME" value="org.webserver.HttpServer" />
       <module name="httpserver" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.*" />
+          <option name="PATTERN" value="org.webserver.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -72,9 +132,59 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="HttpParserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="httpserver" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.webserver.http.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.webserver.http" />
+      <option name="MAIN_CLASS_NAME" value="org.webserver.http.HttpParserTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="HttpParserTest.parseHttpRequest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="httpserver" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.webserver.http.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.webserver.http" />
+      <option name="MAIN_CLASS_NAME" value="org.webserver.http.HttpParserTest" />
+      <option name="METHOD_NAME" value="parseHttpRequest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="HttpVersionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="httpserver" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.webserver.http.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.webserver.http" />
+      <option name="MAIN_CLASS_NAME" value="org.webserver.http.HttpVersionTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.HttpServer" />
+        <item itemvalue="JUnit.HttpParserTest" />
+        <item itemvalue="JUnit.HttpParserTest.parseHttpRequest" />
+        <item itemvalue="JUnit.HttpVersionTest" />
       </list>
     </recent_temporary>
   </component>
@@ -99,6 +209,19 @@
       <workItem from="1726959060907" duration="5820000" />
       <workItem from="1726975662312" duration="3461000" />
       <workItem from="1726989712698" duration="10374000" />
+      <workItem from="1728403331646" duration="2531000" />
+      <workItem from="1728406555243" duration="66000" />
+      <workItem from="1728458260145" duration="6394000" />
+      <workItem from="1728549018830" duration="10173000" />
+      <workItem from="1728573499221" duration="4694000" />
+      <workItem from="1728609709773" duration="529000" />
+      <workItem from="1728613208853" duration="2054000" />
+      <workItem from="1728618907396" duration="4589000" />
+      <workItem from="1728631005893" duration="4664000" />
+      <workItem from="1728639064186" duration="4117000" />
+      <workItem from="1728648487970" duration="12864000" />
+      <workItem from="1728719397518" duration="7336000" />
+      <workItem from="1728741337817" duration="7416000" />
     </task>
     <servers />
   </component>
@@ -112,7 +235,60 @@
           <properties class="java.lang.IllegalThreadStateException" package="java.lang" />
           <option name="timeStamp" value="1" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/org/webserver/http/HttpParserTest.java</url>
+          <line>187</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/org/webserver/http/HttpParserTest.java</url>
+          <line>163</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/org/webserver/http/HttpParserTest.java</url>
+          <line>148</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HandlerRequest.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HandlerRequest.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HandlerRequest.java</url>
+          <line>40</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HandlerRequest.java</url>
+          <line>32</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="java.lang.String" memberName="value" />
+      </pinned-members>
+    </pin-to-top-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="request.bestHttpVersion" language="JAVA" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/WebServer$WebRootHandlerTest.ic" NAME="WebRootHandlerTest Coverage Results" MODIFIED="1728723632362" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.webserver.httpserver.core.io.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/WebServer$HttpParserTest_parseHttpRequest.ic" NAME="HttpParserTest.parseHttpRequest Coverage Results" MODIFIED="1728658260058" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.webserver.http.*</FILTER>
+    </SUITE>
   </component>
 </project>

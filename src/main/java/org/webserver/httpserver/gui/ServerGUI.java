@@ -1,7 +1,7 @@
-package org.example.gui;
+package org.webserver.httpserver.gui;
 
-import org.example.core.ServerListenerThread;
-import org.example.util.FormatTime;
+import org.webserver.httpserver.core.ServerListenerThread;
+import org.webserver.httpserver.util.FormatTime;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,8 +1,16 @@
 GET / HTTP/1.1
-Host: 192.168.1.24:8080
+Host: localhost:8080
 Connection: keep-alive
+sec-ch-ua: "Google Chrome";v="129", "Not=A?Brand";v="8", "Chromium";v="129"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
 Upgrade-Insecure-Requests: 1
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
-Accept-Encoding: gzip, deflate
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
 Accept-Language: en,vi-VN;q=0.9,vi;q=0.8,fr-FR;q=0.7,fr;q=0.6,en-US;q=0.5
+Cookie: ajs_anonymous_id=3045907f-3cd6-4648-b877-89cfd422ba9e; _streamlit_xsrf=2|7d14432b|07a5add7354388ddb643c4d81df6c4bd|1722589568; Idea-773c2672=bcb25554-8fe3-426b-8db7-5f6dae8beed8; fusra_user_info=7ba82341-1cbe-4481-8b89-1f4d88bf33d2/1/2024-09-15; fusra_session_id=1e388465-2ded-4d29-8e52-4d6359517899; .AspNetCore.Cookies=CfDJ8BOH88wseqlFoSRldP_NMc_mxYufLXsAQxUkagw6shjJwqOn0MjjG6vXyniqGfJB95k14BafiiNOYRiRW6dPBeBtGZXdYgfdqoLOgqlvaLgdoQYbgAeNNZFzQrSgkXNK-Xa2s8DfoN7eLwWo5TmqzpOB0KaeaWhU-U2Z_dTKbPcZcbF4-SepqsXEjR6r5FSjNKNUu9ovAxg0vPzSfJXA_FWUR1u8eSsXuEaN04ZCqUkwMIr7KdptxhnsyfSAarTimjr0sebzyvTzLgCKiU2miM5JumcWaRXpZJDpZ-S1ygDTV68dUFg9StIxJVvIoCwR4eohIPSXYhzKVAMM68NR1xTb_gt2yEXxaYycAn6l0q_qgk3kb-y9cZ3GXTVAGMXBZOIRgTfrdU0OgmiTYzq88n6KBIEkbTePHeOJ66KgUmXfbIW5NBTzXatd9wgBHrCz35erKgf1vyCK8vbaHX_gM5MrYaE8P8ushSDKVXdrkaXQiLYDQ8NxjAyig-Xatpp_0JLnh3my3s3deyJvX_G2oE98rRvuELUjDkPTEERElZcK_YSeQ4BpIpb-aK1ehqBthCe-hFiLU5k3eeMOUc7F7ClDB9RLesJlfHpE2hGnEpFzYVkPvUZc7USAHR-cRZXq94yz8YQD5VYwbU6GDObiV34WLBZ-zuo7vern-2LrICQ-; XAF_SizeMode=Medium; XAF_CurrentTheme=Purple

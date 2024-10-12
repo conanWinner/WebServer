@@ -1,9 +1,9 @@
-package org.example;
+package org.webserver;
 
-import org.example.config.Configuration;
-import org.example.config.ConfigurationManager;
-import org.example.core.ServerListenerThread;
-import org.example.gui.ServerGUI;
+import org.webserver.httpserver.config.Configuration;
+import org.webserver.httpserver.config.ConfigurationManager;
+import org.webserver.httpserver.core.ServerListenerThread;
+import org.webserver.httpserver.gui.ServerGUI;
 
 import java.io.IOException;
 

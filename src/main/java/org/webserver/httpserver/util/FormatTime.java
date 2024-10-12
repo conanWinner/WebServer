@@ -1,4 +1,4 @@
-package org.example.util;
+package org.webserver.httpserver.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

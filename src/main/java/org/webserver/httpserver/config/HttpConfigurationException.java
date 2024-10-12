@@ -1,4 +1,4 @@
-package org.example.config;
+package org.webserver.httpserver.config;
 
 public class HttpConfigurationException extends RuntimeException {
 
