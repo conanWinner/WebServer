@@ -2,6 +2,7 @@ package org.webserver.httpserver.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.webserver.http.HttpMethod;
 import org.webserver.http.HttpParser;
 import org.webserver.http.HttpParsingException;
 import org.webserver.http.HttpRequest;
@@ -32,6 +33,7 @@ public class HttpConnectionWorkerThread extends Thread{
             is = socket.getInputStream();
             os = socket.getOutputStream();
 
+            // read data from web => saving in lineBuilder
             final StringBuilder lineBuilder = new StringBuilder();
             int b;
             boolean wasNewLine = false;
@@ -55,12 +57,16 @@ public class HttpConnectionWorkerThread extends Thread{
                 }
             }
 
+            System.out.println("+=====+++++++++++++++  \n" + lineBuilder);
+
+            // parse data from lineBuilder
             InputStream data = new ByteArrayInputStream(
                     lineBuilder.toString().getBytes(
                             StandardCharsets.UTF_8
                     )
             );
 
+            // check format ( parseHttpRequest  )
             HttpRequest request = null;
             try {
                 request = httpParser.parseHttpRequest(
@@ -71,11 +77,25 @@ public class HttpConnectionWorkerThread extends Thread{
 
             //TODO
             HandlerRequest handlerRequest = new HandlerRequest();
-            if (request != null) {
+
+            System.out.println(request.getRequestTarget());
+
+            if (request.getMethod().equals(HttpMethod.GET)) {
                 handlerRequest.handleGetRequest(request, os);
+            } else if (request.getMethod().equals(HttpMethod.POST)) {
+                handlerRequest.handlePostRequest(request, os, is);
+            } else if (request.getMethod().equals(HttpMethod.OPTIONS)) {
+                os.write("HTTP/1.1 204 No Content\r\n".getBytes());
+                os.write("Access-Control-Allow-Origin: *\r\n".getBytes());
+                os.write("Access-Control-Allow-Methods: GET, POST, OPTIONS\r\n".getBytes());
+                os.write("Access-Control-Allow-Headers: Content-Type\r\n".getBytes());
+                os.write("\r\n".getBytes());
+                os.flush();
             }
 
         }catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
             try {

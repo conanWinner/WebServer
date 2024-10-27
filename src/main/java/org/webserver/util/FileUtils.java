@@ -20,23 +20,27 @@ public class FileUtils {
 
     public static String probeContentType(String fileName) {
         final String[] tokens = fileName.split("\\.");
-        final String extension = tokens[tokens.length - 1];
+        final String extension = tokens[tokens.length - 1].toLowerCase();
 
         return switch (extension) {
             case "html" -> "text/html";
             case "txt" -> "text/plain";
             case "css" -> "text/css";
             case "gif" -> "image/gif";
-            case "jpg" -> "image/jpeg";
-            case "jpeg" -> "image/jpeg";
-            case "js" -> "text/javascript";
+            case "jpg", "jpeg" -> "image/jpeg";
+            case "js" -> "application/javascript";
             case "json" -> "application/json";
             case "mp4" -> "video/mp4";
             case "png" -> "image/png";
-            default -> "text/plain";
+            case "woff" -> "font/woff";
+            case "woff2" -> "font/woff2";
+            case "ttf" -> "font/ttf";
+            case "eot" -> "application/vnd.ms-fontobject";
+            case "svg" -> "image/svg+xml";
+            default -> "application/octet-stream";  // MIME mặc định cho các file không xác định
         };
-
     }
+
 
     public static InputStream getInputStream(String fileName) {
         try {

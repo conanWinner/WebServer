@@ -2,7 +2,12 @@ package org.webserver.http;
 
 public enum HttpMethod {
 
-    GET, HEAD;
+    GET,
+    POST,
+    HEAD,
+    OPTIONS,
+
+    ;
 
     public static final int MAX_LENGTH;
 
