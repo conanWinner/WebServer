@@ -18,6 +18,7 @@ public class ServerListenerThread extends Thread{
     private String localhost;
     private ServerSocket  serverSocket;
     private ServerGUI gui;
+    public static volatile boolean isRunning = false;
 
     //set contains number connection of client
     static  Set<InetAddress> set = new HashSet<>();
@@ -46,10 +47,9 @@ public class ServerListenerThread extends Thread{
 
     @Override
     public void run() {
-
-
         try {
-            while( serverSocket.isBound() && !serverSocket.isClosed() ){
+            isRunning = true;
+            while(isRunning && serverSocket.isBound() && !serverSocket.isClosed() ){
                 Socket socket = serverSocket.accept();
                 String clientIp = socket.getInetAddress().getHostAddress();
                 if (setBlackList.contains(clientIp)) {
@@ -69,17 +69,29 @@ public class ServerListenerThread extends Thread{
                 httpConnectionWorkerThread.start();
             }
         } catch (IOException e) {
+            if (isRunning) {
+                e.printStackTrace();
+            }
             throw new RuntimeException(e);
         }finally {
-            if(serverSocket != null){
-                try {
-                    serverSocket.close();
-                } catch (IOException e) {
-                }
+            closeServerSocket();
+        }
+    }
+
+    public void stopServer() {
+        isRunning = false;
+        closeServerSocket();
+        this.interrupt();
+    }
+
+    private void closeServerSocket() {
+        if (serverSocket != null && !serverSocket.isClosed()) {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-
-
     }
 
     private void updateConnectionCount(int connectionCount) {

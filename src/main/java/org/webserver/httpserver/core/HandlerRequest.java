@@ -13,7 +13,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +36,7 @@ public class HandlerRequest {
         int iduser = 0;
         try {
             Integer.parseInt(array[array.length - 1]);
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
         }
 
 //        fileName = new StringBuilder("/");
@@ -48,7 +47,7 @@ public class HandlerRequest {
 //        }
 
         System.out.println(iduser);
-        for(int i = 0; i < array.length; i++)
+        for (int i = 0; i < array.length; i++)
             System.out.println(i + " " + array[i]);
 
         System.out.println("======================================");
@@ -65,7 +64,6 @@ public class HandlerRequest {
         // ========= Convert to format 200 OK =============
         final StringBuilder responseMetadata = new StringBuilder();
         responseMetadata.append("HTTP/1.1 200 OK\r\n");
-
         responseMetadata.append(String.format("Content-Type: %s\r\n", FileUtils.probeContentType(fileName)));
 
         final InputStream fileStream = FileUtils.getInputStream(fileName);
@@ -75,21 +73,20 @@ public class HandlerRequest {
         responseMetadata.append("\r\n");
 
 
-        // ===============response to GUI client==============
+        // ===============response to GUI client (just header) ==============
         outputStream.write(responseMetadata.toString().getBytes(StandardCharsets.UTF_8));
 
 
-
+        // =============== reponse to GUI client with body content ===========
         try (fileStream) {
             fileStream.transferTo(outputStream);
         }
     }
 
 
-
     public void handlePostRequest(HttpRequest request,
-                                         OutputStream clientOs,
-                                         InputStream inputStream) throws Exception {
+                                  OutputStream clientOs,
+                                  InputStream inputStream) throws Exception {
         int remaining = Integer.parseInt(request.getHeader("Content-Length"));
         final ByteArrayOutputStream os = new ByteArrayOutputStream();
         final byte[] buff = new byte[2048];
@@ -98,19 +95,20 @@ public class HandlerRequest {
             int read = inputStream.read(buff, 0, Math.min(remaining, buff.length));
             os.write(buff, 0, read);
             remaining -= read;
-            System.out.println(remaining);
+//            System.out.println(remaining);
         }
 
         final String body = os.toString();
 
         //Data with format JSON
-        System.out.println(Json.parse(body));
         JsonNode json = Json.parse(body);
+        System.out.println("json:   " + json);
+
 
         //Convert json => User
         User user = Json.fromJson(json, User.class);
 
-        //
+        // URL target
         String fileName = request.getRequestTarget();
 
 
@@ -120,33 +118,40 @@ public class HandlerRequest {
 
 
         switch (fileName) {
-
+            // Create user
             case "/api/users":
                 checkResponse = 1;
 
-                UserRepository.saveUser(user.getFullname(), user.getUsername(), user.getPassword(), user.getEmail(), user.getPhonenumber(), user.getAddress());
-                body1 = "{\"message\": \"Success\"}";
+                boolean checkSaveUser = UserRepository.saveUser(user.getFullName(), user.getPassword(), user.getEmail(), user.getPhoneNumber(), user.getAddress());
+                if (checkSaveUser) {
+                    body1 = "{\"message\": \"Success\"}";
+                } else {
+                    body1 = "{\"message\": \"Email has already existed\"}";
+                }
 
                 break;
 
+            // Login user
             case "/api/login":
                 checkResponse = 1;
 
-                int iduser = UserRepository.loginUser(user.getEmail(), user.getPassword());
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("iduser", iduser);
-
+//                int iduser = UserRepository.loginUser(user.getEmail(), user.getPassword());
+                User userR = UserRepository.loginUser(user.getEmail(), user.getPassword());
                 Map<String, Object> bodyMap = new HashMap<>();
-                bodyMap.put("message", "Success");
-                bodyMap.put("result", resultMap);
+                if (userR != null) {
+                    String userJson = userR.toJson();
 
+                    bodyMap.put("message", "Success");
+                    bodyMap.put("result", userJson);
+
+                } else {
+                    bodyMap.put("message", "Email or password was wrong!");
+                }
                 body1 = mapper.writeValueAsString(bodyMap);
-
                 break;
-
-//            case "/api/users/":
+            case "/api/users/":
 //                UserRepository.findById(@Parameter("id"));
-//                break;
+                break;
 
             default:
                 break;
@@ -161,22 +166,18 @@ public class HandlerRequest {
                             "Content-Length: " + "{\"message\":\"Error\"}".getBytes(StandardCharsets.UTF_8).length + "\r\n" +
                             "Access-Control-Allow-Origin: *\r\n" +  // Để tránh lỗi CORS
                             "\r\n" +
-                            "{\"message\":\"Success\"}";
+                            "{\"message\":\"Error\"}";
 
             clientOs.write(httpResponse.getBytes(StandardCharsets.UTF_8));
             clientOs.flush();
             clientOs.close();
 
         } else {
-
             sendResponse(clientOs, body1);
-
         }
 
 
-
     }
-
 
 
     public void sendResponse(OutputStream clientOs, String body) throws Exception {
@@ -197,7 +198,6 @@ public class HandlerRequest {
         clientOs.flush();
         clientOs.close();
     }
-
 
 
 }

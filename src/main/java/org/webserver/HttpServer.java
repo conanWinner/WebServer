@@ -15,20 +15,15 @@ public class HttpServer {
 
         Configuration conf = ConfigurationManager.getInstance().getCurrentConfiguration();
 
-        try {
-
-            ServerListenerThread serverListener = new ServerListenerThread(conf.getPort(), conf.getWebroot(), conf.getLocalhost());
+        //            ServerListenerThread serverListener = new ServerListenerThread(conf.getPort(), conf.getWebroot(), conf.getLocalhost());
 //            serverListener.start();
-            ServerGUI serverGUI = new ServerGUI(serverListener);
+//            ServerGUI serverGUI = new ServerGUI(serverListener);
+        ServerGUI serverGUI = new ServerGUI(conf);
 
-            //update count client
-            serverListener.setConnectionCountCallback(serverGUI::GUIupdateConnectionCount);
-            serverListener.setConnectionListCallback(serverGUI::GUIaddActiveUser);
+        //update count client
+//            serverListener.setConnectionCountCallback(serverGUI::GUIupdateConnectionCount);
+//            serverListener.setConnectionListCallback(serverGUI::GUIaddActiveUser);
 
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
     }
 

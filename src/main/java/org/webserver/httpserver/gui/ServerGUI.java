@@ -1,5 +1,7 @@
 package org.webserver.httpserver.gui;
 
+import org.webserver.httpserver.config.Configuration;
+import org.webserver.httpserver.config.ConfigurationManager;
 import org.webserver.httpserver.core.ServerListenerThread;
 import org.webserver.httpserver.util.FormatTime;
 
@@ -10,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.util.Set;
 
 public class ServerGUI {
+    private ServerListenerThread serverListener;
+    private Configuration conf;
     private Set<String> setBlackList = ServerListenerThread.setBlackList;
 
     private JFrame frame;
@@ -26,7 +30,8 @@ public class ServerGUI {
     private DefaultListModel<String> rightListModel;  // Model cho danh sách bên phải
     private JList<String> blackList;  // Danh sách bên phải
 
-    public ServerGUI(ServerListenerThread serverListener) {
+    public ServerGUI(Configuration conf) {
+        this.conf = conf;
 
         frame = new JFrame("HTTP Server Control Panel");
         startButton = new JButton("Start Server");
@@ -61,27 +66,19 @@ public class ServerGUI {
         frame.add(new JScrollPane(activeUsersList), "Center");
         frame.add(new JScrollPane(blackList), "East");
 
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Thread(() -> {
-                    logArea.append("Starting server...\n");
-                    serverListener.start();
-                    startButton.setEnabled(false);
-                    stopButton.setEnabled(true);
-                }).start();
-            }
-        });
+        startButton.addActionListener(e -> startServer());
+        stopButton.addActionListener(e -> stopServer());
 
-        stopButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                logArea.append("Stopping server...\n");
-                serverListener.interrupt();  // Dừng luồng
-                startButton.setEnabled(true);
-                stopButton.setEnabled(false);
-            }
-        });
+//        stopButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                logArea.append("Stopping server...\n");
+//                serverListener.interrupt();  // Dừng luồng
+//                ServerListenerThread.isRunning = false;
+//                startButton.setEnabled(true);
+//                stopButton.setEnabled(false);
+//            }
+//        });
 
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -118,6 +115,33 @@ public class ServerGUI {
         frame.pack();
         frame.setLocationRelativeTo(null);  // Đặt giao diện chính giữa màn hình
         frame.setVisible(true);
+    }
+
+    private void startServer() {
+        new Thread(() -> {
+            try {
+                logArea.append("Starting server...\n");
+                startButton.setEnabled(false);
+                stopButton.setEnabled(true);
+
+                serverListener = new ServerListenerThread(conf.getPort(), conf.getWebroot(), conf.getLocalhost());
+                serverListener.setConnectionCountCallback(this::GUIupdateConnectionCount);
+                serverListener.setConnectionListCallback(this::GUIaddActiveUser);
+                serverListener.start();
+
+            } catch (Exception ex) {
+                logArea.append("Failed to start server: " + ex.getMessage() + "\n");
+            }
+        }).start();
+    }
+
+    private void stopServer() {
+        logArea.append("Stopping server...\n");
+        if (serverListener != null) {
+            serverListener.stopServer();
+        }
+        startButton.setEnabled(true);
+        stopButton.setEnabled(false);
     }
 
     // Cập nhật số lượng kết nối

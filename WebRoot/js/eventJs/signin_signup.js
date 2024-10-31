@@ -1,36 +1,44 @@
 import { signin_url, signup_url, URLIndex } from "./common.js";
 
 $(document).ready(function () {
+// ======================= SIGN UP =======================
   $("#form_signup").submit(function (e) {
     e.preventDefault();
 
-    const fullname = $("#signup_fullname").val();
-    const username = $("#signup_username").val();
+    const fullName = $("#signup_fullname").val();
     const email = $("#signup_email").val();
-    const phonenumber = $("#signup_phonenumber").val();
+    const phoneNumber = $("#signup_phonenumber").val();
     const address = $("#signup_address").val();
     const password = $("#signup_password").val();
     const re_password = $("#signup_password2").val();
 
+    const dataToSend =
+    {
+              fullName: fullName,
+              password: password,
+              email: email,
+              address: address,
+              phoneNumber: phoneNumber
+    }
+    const jsonString = JSON.stringify(dataToSend, null, 2);
     if (re_password != password) {
       alert("Password not match");
     } else {
+    console.log("JSON to be sent:", dataToSend);
       $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         url: signup_url,
-        data: JSON.stringify({
-          fullname,
-          username,
-          email,
-          phonenumber,
-          password,
-          address,
-        }),
+        data: jsonString,
         success: function (response) {
-          alert("Đăng ký thành công, vui lòng đăng nhập!");
           console.log(response);
+          if(response.message == "Success"){
+            alert("Đăng ký thành công, vui lòng đăng nhập!");
+          }else if(response.message == "Email has already existed"){
+            alert("Email đã tồn tại");
+          }
+
         },
         error: function (error) {
           console.log(error);
@@ -40,6 +48,7 @@ $(document).ready(function () {
     }
   });
 
+// ======================= SIGN UP =======================
   $("#form_signin").submit(function (e) {
     e.preventDefault();
 
@@ -53,9 +62,13 @@ $(document).ready(function () {
       url: signin_url,
       data: JSON.stringify({ email, password }),
       success: function (response) {
-        alert("Đăng nhập thành công");
-        localStorage.setItem("iduser", response.result.iduser);
-        window.location.href = URLIndex;
+        if(response.message == "Success"){
+            localStorage.setItem("User", JSON.stringify(response.result));
+            alert("Đăng nhập thành công");
+            window.location.href = URLIndex;
+        }else if (response.message == "Email or password was wrong!"){
+            alert("Email hoặc mật khẩu sai");
+        }
       },
       error: function (error) {
         console.log(error);

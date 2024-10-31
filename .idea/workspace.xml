@@ -5,72 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9133bf40-c1ad-4576-9919-98e08dd4f95a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/WebRoot/blog.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/contact.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/css/animate.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/css/aos.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/css/bootstrap-datepicker.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/css/bootstrap.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/css/fl-bigmug-line.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/css/jquery-ui.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/css/magnific-popup.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/css/owl.carousel.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/css/owl.theme.default.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/css/owl.video.play.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/css/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/domain.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/bigmug-line/fl-bigmug-line.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/bigmug-line/fl-bigmug-line.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/bigmug-line/fl-bigmug-line.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/bigmug-line/fl-bigmug-line.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/Flaticon.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/Flaticon.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/Flaticon.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/Flaticon.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/Flaticond41d.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/flaticon.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/icomoon/fonts/icomoon1a44.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/icomoon/fonts/icomoon1a44.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/icomoon/fonts/icomoon1a44.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/icomoon/fonts/icomoon1a44.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/fonts/icomoon/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/hosting.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/images/hero_bg_1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/images/hero_bg_2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/images/hero_bg_3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/images/img_1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/images/img_2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/images/img_3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/images/img_4.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/images/person_1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/images/person_2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/index-2.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/js/aos.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/js/bootstrap-datepicker.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/js/bootstrap.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/js/jquery-3.3.1.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/js/jquery-ui.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/js/jquery.countdown.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/js/jquery.magnific-popup.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/js/jquery.stellar.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/js/main.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/js/owl.carousel.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/js/popper.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebRoot/register.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/util/DecodeJson.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/util/EndcodeJson.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/js/eventJs/checkLogin.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/js/eventJs/checkLogin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/js/eventJs/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/js/eventJs/common.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/js/eventJs/signin_signup.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/js/eventJs/signin_signup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/register.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/common/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/common/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/HttpServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/HttpServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HandlerRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HandlerRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HttpConnectionWorkerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HttpConnectionWorkerThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/ServerListenerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/ServerListenerThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/gui/ServerGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/gui/ServerGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/util/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/util/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/http.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/http.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,12 +28,12 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Python Script" />
         <option value="HTML File" />
-        <option value="Class" />
         <option value="JUnit5 Test Class" />
         <option value="CSS File" />
+        <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -124,7 +72,7 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;19&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/_DEV/Java/WebServer/WebRoot&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/NetworkProgramming/WebServer&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -293,16 +241,6 @@
           <url>file://$PROJECT_DIR$/src/test/java/org/webserver/http/HttpParserTest.java</url>
           <line>148</line>
           <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HttpConnectionWorkerThread.java</url>
-          <line>78</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HttpConnectionWorkerThread.java</url>
-          <line>80</line>
-          <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

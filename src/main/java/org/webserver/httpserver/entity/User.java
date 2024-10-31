@@ -1,44 +1,38 @@
 package org.webserver.httpserver.entity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class User {
 
-    private int iduser;
-    private String fullname;
-    private String username;
+//    private int iduser;
+    private String fullName;
     private String password;
     private String email;
     private String address;
+    private String phoneNumber;
 
-    private String phonenumber;
 
+//    public int getIduser() {
+//        return iduser;
+//    }
 
-    public int getIduser() {
-        return iduser;
+    public String getFullName() {
+        return fullName;
     }
 
-    public String getFullname() {
-        return fullname;
+    public void setFullName(String fullname) {
+        this.fullName = fullname;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getUsername() {
-        return username;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
-    }
-
-    public String getPhonenumber() {
-        return phonenumber;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getPassword() {
         return password;
@@ -67,12 +61,29 @@ public class User {
     public User() {
     }
 
-    public User(String fullname, String username, String password, String email, String phonenumber, String address) {
-        this.fullname = fullname;
-        this.username = username;
+    public User(String fullname, String password, String email, String phonenumber, String address) {
+        this.fullName = fullname;
         this.password = password;
         this.email = email;
-        this.phonenumber = phonenumber;
+        this.phoneNumber = phonenumber;
         this.address = address;
+    }
+
+    public User(String fullname, String email, String phonenumber, String address) {
+        this.fullName = fullname;
+        this.email = email;
+        this.phoneNumber = phonenumber;
+        this.address = address;
+    }
+
+    // Phương thức chuyển đổi sang JSON
+    public String toJson() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{}"; // Trả về một chuỗi JSON rỗng trong trường hợp lỗi
+        }
     }
 }

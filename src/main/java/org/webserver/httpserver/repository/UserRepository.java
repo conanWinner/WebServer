@@ -1,25 +1,18 @@
 package org.webserver.httpserver.repository;
 
 import org.webserver.httpserver.entity.User;
+import org.webserver.httpserver.exception.ErrorCode;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 public class UserRepository {
-
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/webserver";
-    private static final String USER = "root";
-    private static final String PASSWORD = "root";
 
     public UserRepository() {
     }
 
-
     // Kết nối đến MySQL
     private static Connection connect() throws Exception {
-        return DriverManager.getConnection(DB_URL, USER, PASSWORD);
+        return DriverManager.getConnection(ConfigurationDB.DB_URL, ConfigurationDB.USER, ConfigurationDB.PASSWORD);
     }
 
 //    fullname;
@@ -30,22 +23,48 @@ public class UserRepository {
 //    address;
 
     // Saving user
-    public static void saveUser(String fullname, String username, String password, String email, String phonenumber, String address) {
+    public static boolean saveUser(String fullname, String password, String email, String phonenumber, String address) {
         try (Connection conn = connect()) {
-            String query = "INSERT INTO user (fullname, username, password, email, phonenumber, address) VALUES (?, ?, ?, ?, ?, ?)";
+            // Kiểm tra tồn tại email
+            if(existByEmail(email)){
+                return false;
+            }
+            String query = "INSERT INTO user (fullName, password, email, phoneNumber, address) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(query);
 
             pstmt.setString(1, fullname);
-            pstmt.setString(2, username);
-            pstmt.setString(3, password);
-            pstmt.setString(4, email);
-            pstmt.setString(5, phonenumber);
-            pstmt.setString(6, address);
+            pstmt.setString(2, password);
+            pstmt.setString(3, email);
+            pstmt.setString(4, phonenumber);
+            pstmt.setString(5, address);
 
             pstmt.executeUpdate();
+            return true;
+        }catch (SQLIntegrityConstraintViolationException e){
+            System.out.println("loi sign up");
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean existByEmail(String email){
+        try (Connection conn = connect()) {
+            String checkEmailQuery = "SELECT COUNT(*) FROM user WHERE email = ?";
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkEmailQuery)) {
+                checkStmt.setString(1, email);
+                try (ResultSet rs = checkStmt.executeQuery()) {
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        return true; // True nếu email đã tồn tại
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     //Find user by id
@@ -61,13 +80,12 @@ public class UserRepository {
             if (rs.next()) {
 
                 String fullname = rs.getString("fullname");
-                String username = rs.getString("username");
                 String password = rs.getString("password");
                 String email = rs.getString("email");
                 String phonenumber = rs.getString("phonenumber");
                 String address = rs.getString("address");
 
-                return new User(fullname, username, password, email, phonenumber, address);
+                return new User(fullname, password, email, phonenumber, address);
 
             }
         }
@@ -76,32 +94,27 @@ public class UserRepository {
     }
 
     // Check login
-    public static int loginUser(String email, String password) throws Exception {
+    public static User loginUser(String email, String password) throws Exception {
         try (Connection connection = connect()) {
-            String query = "select iduser, password from user where email = ?";
+//            String query = "select iduser, password from user where email = ?";
+            String query = "SELECT * FROM user WHERE email = ? AND password = ?";
             PreparedStatement ps = connection.prepareStatement(query);
 
             ps.setString(1, email);
+            ps.setString(2, password);
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+                String fullName = rs.getString("fullName");
+                String emailR = rs.getString("email");
+                String phoneNumber = rs.getString("phoneNumber");
+                String address = rs.getString("address");
 
-                int iduser = rs.getInt("iduser");
-
-                String pass = rs.getString("password");
-
-                if (pass.equals(password)) {
-
-                    return iduser;
-
-                }
-
+                return new User(fullName, emailR, phoneNumber, address);
             }
-
         }
-
-        return 0;
+        return null;
     }
 
     // Hàm lấy danh sách tài khoản từ MySQL
