@@ -194,7 +194,7 @@ public class HandlerRequest {
         String fileName = request.getRequestTarget();
         System.out.println();
 
-//        int checkResponse = 0;
+
         String body1 = "";  //body response
 
 //            Handling Update user's information
@@ -203,22 +203,18 @@ public class HandlerRequest {
         System.out.println("check email: " + emailUser);
         if(!UserRepository.existByEmail(emailUser)){
             body1 = "{\"message\": \"Email not exist\"}";
-//            System.out.println("check email");
         }else if(UserRepository.loginUser(emailUser, userUpdate.getOldPassword()) == null){
             body1 = "{\"message\": \"Your Old Password was wrong\"}";
-//            System.out.println("check password");
         }else{
-//            boolean checkResponse =  UserRepository.updateUser(userUpdate, emailUser);
-//            if(checkResponse){
-//                body1 = "{\"message\": \"Success\"}";
-//            } else {
-//                sendBadRequest(clientOs);
-//            }
+              boolean checkResponse =  UserRepository.updateUser(userUpdate, emailUser);
+              if(checkResponse){
+                body1 = "{\"message\": \"Success\"}";
+           } else {
+               sendBadRequest(clientOs);
+          }
         }
-//        System.out.println("check send bad request");
-        sendBadRequest(clientOs);
 
-//        sendResponse(clientOs, body1);
+        sendResponse(clientOs, body1);
     }
 
 
