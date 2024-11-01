@@ -1,8 +1,6 @@
-function login() {
-  const _user = localStorage.getItem("User");
+function login(user) {
 
-  if (_user) {
-      const user = JSON.parse(JSON.parse(_user));
+  if (user) {
       console.log("user", user);  // In ra đối tượng user
 
       // Truy cập các thuộc tính
@@ -19,7 +17,7 @@ function login() {
   } else {
       console.log("Không tìm thấy thông tin người dùng trong localStorage.");
   }
-  return _user ? _user : null;
+  return user ? user : null;
 }
 
 function logout() {
@@ -27,7 +25,10 @@ function logout() {
 }
 
 $(document).ready(function () {
-  if (login() != null) {
+  const _user = localStorage.getItem("User");
+  const user = JSON.parse(JSON.parse(_user));
+
+  if (login(user) != null) {
     //   $(".icon_user").css("display", "inline");
     $("#btn_register_nav").css("display", "none");
     $("#btn_login_nav").css("display", "none");
@@ -40,4 +41,16 @@ $(document).ready(function () {
     logout();
     //   window.location.href = URLIndex;
   });
+
+//  ============== Fill in personal information ===============
+    const fullName = user.fullName;
+    const email = user.email;
+    const phoneNumber = user.phoneNumber;
+    const address = user.address;
+
+     $("#fullName").val(fullName);
+     $("#email").val(email);
+     $("#phoneNumber").val(phoneNumber);
+     $("#address").val(address);
+
 });

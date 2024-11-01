@@ -1,6 +1,7 @@
 package org.webserver.httpserver.repository;
 
 import org.webserver.httpserver.entity.User;
+import org.webserver.httpserver.entity.UserUpdate;
 import org.webserver.httpserver.exception.ErrorCode;
 
 import java.sql.*;
@@ -25,10 +26,7 @@ public class UserRepository {
     // Saving user
     public static boolean saveUser(String fullname, String password, String email, String phonenumber, String address) {
         try (Connection conn = connect()) {
-            // Kiểm tra tồn tại email
-            if(existByEmail(email)){
-                return false;
-            }
+
             String query = "INSERT INTO user (fullName, password, email, phoneNumber, address) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(query);
 
@@ -116,6 +114,37 @@ public class UserRepository {
         }
         return null;
     }
+
+    public static boolean updateUser(UserUpdate userUpdate, String email){
+        String fullName = userUpdate.getFullName();
+        String oldPassword = userUpdate.getOldPassword();
+        String newPassword = userUpdate.getNewPassword();
+        String address = userUpdate.getAddress();
+        String phoneNumber = userUpdate.getPhoneNumber();
+
+        try (Connection conn = connect()) {
+
+
+            String query = "UPDATE user SET  fullName=?, password=?, phoneNumber=?, address=? WHERE email=?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+
+            pstmt.setString(1, fullName);
+            pstmt.setString(2, newPassword);
+            pstmt.setString(3, phoneNumber);
+            pstmt.setString(4, address);
+            pstmt.setString(5, email);
+
+            return pstmt.executeUpdate() > 0;
+        }catch (SQLIntegrityConstraintViolationException e){
+            System.out.println("loi update");
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     // Hàm lấy danh sách tài khoản từ MySQL
 //    public static List<User> loadUsers() {

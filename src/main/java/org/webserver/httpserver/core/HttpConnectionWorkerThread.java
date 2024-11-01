@@ -84,10 +84,16 @@ public class HttpConnectionWorkerThread extends Thread{
                 handlerRequest.handleGetRequest(request, os);
             } else if (request.getMethod().equals(HttpMethod.POST)) {
                 handlerRequest.handlePostRequest(request, os, is);
-            } else if (request.getMethod().equals(HttpMethod.OPTIONS)) {
+            }else if(request.getMethod().equals(HttpMethod.PUT)){
+                System.out.println("check method put");
+                handlerRequest.handlePutRequest(request, os, is);
+            }else if(request.getMethod().equals(HttpMethod.DELETE)){
+//                handlerRequest.handleDeleteRequest(request, os, is);
+            }
+            else if (request.getMethod().equals(HttpMethod.OPTIONS)) {
                 os.write("HTTP/1.1 204 No Content\r\n".getBytes());
                 os.write("Access-Control-Allow-Origin: *\r\n".getBytes());
-                os.write("Access-Control-Allow-Methods: GET, POST, OPTIONS\r\n".getBytes());
+                os.write("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n".getBytes());
                 os.write("Access-Control-Allow-Headers: Content-Type\r\n".getBytes());
                 os.write("\r\n".getBytes());
                 os.flush();

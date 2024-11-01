@@ -22,7 +22,7 @@ $(document).ready(function () {
     }
     const jsonString = JSON.stringify(dataToSend, null, 2);
     if (re_password != password) {
-      alert("Password not match");
+      alert("Mật khẩu không trùng khớp");
     } else {
     console.log("JSON to be sent:", dataToSend);
       $.ajax({
