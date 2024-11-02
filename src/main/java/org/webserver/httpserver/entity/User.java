@@ -7,8 +7,6 @@ public class User {
 //    private int iduser;
     private String fullName;
     private String password;
-    private String oldPassword;
-    private String newPassword;
     private String email;
     private String address;
     private String phoneNumber;
@@ -58,22 +56,6 @@ public class User {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getOldPassword() {
-        return oldPassword;
-    }
-
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
     }
 
     public User() {

@@ -35,20 +35,17 @@ $(document).ready(function () {
           console.log(response);
           if(response.message == "Success"){
             alert("Đăng ký thành công, vui lòng đăng nhập!");
-          }else if(response.message == "Email has already existed"){
-            alert("Email đã tồn tại");
           }
-
         },
         error: function (error) {
-          console.log(error);
-          alert("Có lỗi xảy ra");
+          const errorResponse = JSON.parse(error.responseText);
+          alert("Error: " + errorResponse.message);
         },
       });
     }
   });
 
-// ======================= SIGN UP =======================
+// ======================= SIGN IN =======================
   $("#form_signin").submit(function (e) {
     e.preventDefault();
 
@@ -63,16 +60,14 @@ $(document).ready(function () {
       data: JSON.stringify({ email, password }),
       success: function (response) {
         if(response.message == "Success"){
-            localStorage.setItem("User", JSON.stringify(response.result));
+            sessionStorage.setItem("User", JSON.stringify(response.result));
             alert("Đăng nhập thành công");
             window.location.href = URLIndex;
-        }else if (response.message == "Email or password was wrong!"){
-            alert("Email hoặc mật khẩu sai");
         }
       },
       error: function (error) {
-        console.log(error);
-        alert("Có lỗi xảy ra");
+        const errorResponse = JSON.parse(error.responseText);
+        alert("Error: " + errorResponse.message);
       },
     });
   });

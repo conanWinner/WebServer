@@ -15,17 +15,18 @@ function login(user) {
       console.log("Số điện thoại:", phoneNumber);
       console.log("Địa chỉ:", address);
   } else {
-      console.log("Không tìm thấy thông tin người dùng trong localStorage.");
+      console.log("Không tìm thấy thông tin người dùng trong sessionStorage.");
   }
   return user ? user : null;
 }
 
 function logout() {
-  localStorage.removeItem("User");
+  sessionStorage.removeItem("User");
 }
+export { logout };
 
 $(document).ready(function () {
-  const _user = localStorage.getItem("User");
+  const _user = sessionStorage.getItem("User");
   const user = JSON.parse(JSON.parse(_user));
 
   if (login(user) != null) {

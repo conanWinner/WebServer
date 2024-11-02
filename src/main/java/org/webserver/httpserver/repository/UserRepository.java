@@ -16,12 +16,6 @@ public class UserRepository {
         return DriverManager.getConnection(ConfigurationDB.DB_URL, ConfigurationDB.USER, ConfigurationDB.PASSWORD);
     }
 
-//    fullname;
-//    username;
-//    password;
-//    email;
-//    phone
-//    address;
 
     // Saving user
     public static boolean saveUser(String fullname, String password, String email, String phonenumber, String address) {
@@ -117,7 +111,6 @@ public class UserRepository {
 
     public static boolean updateUser(UserUpdate userUpdate, String email){
         String fullName = userUpdate.getFullName();
-        String oldPassword = userUpdate.getOldPassword();
         String newPassword = userUpdate.getNewPassword();
         String address = userUpdate.getAddress();
         String phoneNumber = userUpdate.getPhoneNumber();
@@ -145,6 +138,22 @@ public class UserRepository {
         }
     }
 
+    public static boolean deleteUser(String email){
+        try (Connection conn = connect()) {
+            String sql = "DELETE FROM user WHERE email=?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+
+            return pstmt.executeUpdate() > 0;
+        }catch (SQLIntegrityConstraintViolationException e){
+            System.out.println("loi delete");
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     // Hàm lấy danh sách tài khoản từ MySQL
 //    public static List<User> loadUsers() {

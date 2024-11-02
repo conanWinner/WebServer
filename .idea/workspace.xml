@@ -5,23 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9133bf40-c1ad-4576-9919-98e08dd4f95a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/blog.html" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/blog.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WebRoot/contact.html" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/contact.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/domain.html" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/domain.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/hosting.html" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/hosting.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/index-2.html" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/index-2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/js/eventJs/changeInfor.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/js/eventJs/changeInfor.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WebRoot/js/eventJs/checkLogin.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/js/eventJs/checkLogin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WebRoot/js/eventJs/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/js/eventJs/common.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WebRoot/js/eventJs/signin_signup.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/js/eventJs/signin_signup.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WebRoot/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/WebRoot/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpStatusCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpStatusCode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HandlerRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HandlerRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HttpConnectionWorkerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HttpConnectionWorkerThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/exception/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/exception/ErrorCode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/repository/UserRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,7 +71,7 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;19&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Program Files/Java/jdk-19&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/JavaSpring/community-support&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,

@@ -85,10 +85,9 @@ public class HttpConnectionWorkerThread extends Thread{
             } else if (request.getMethod().equals(HttpMethod.POST)) {
                 handlerRequest.handlePostRequest(request, os, is);
             }else if(request.getMethod().equals(HttpMethod.PUT)){
-                System.out.println("check method put");
                 handlerRequest.handlePutRequest(request, os, is);
             }else if(request.getMethod().equals(HttpMethod.DELETE)){
-//                handlerRequest.handleDeleteRequest(request, os, is);
+                handlerRequest.handleDeleteRequest(request, os, is);
             }
             else if (request.getMethod().equals(HttpMethod.OPTIONS)) {
                 os.write("HTTP/1.1 204 No Content\r\n".getBytes());
