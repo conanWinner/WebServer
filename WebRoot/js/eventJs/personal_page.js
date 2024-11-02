@@ -69,7 +69,9 @@ $(document).ready(function () {
             }
           },
           error: function (error) {
+            console.log(error);
             const errorResponse = JSON.parse(error.responseText);
+            console.log(errorResponse)
             alert("Error: " + errorResponse.message);
           },
         });

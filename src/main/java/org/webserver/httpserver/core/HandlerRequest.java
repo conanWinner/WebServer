@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.webserver.common.Constants;
 import org.webserver.http.HttpRequest;
+import org.webserver.http.HttpStatusCode;
 import org.webserver.httpserver.entity.User;
 import org.webserver.httpserver.entity.UserUpdate;
+import org.webserver.httpserver.exception.ErrorCode;
 import org.webserver.httpserver.repository.UserRepository;
 import org.webserver.httpserver.util.Json;
 import org.webserver.util.FileUtils;
@@ -103,15 +105,15 @@ public class HandlerRequest {
         // URL target
         String fileName = request.getRequestTarget();
 
-
+        ErrorCode errorBody;
         String body1 = "";  //body response
         switch (fileName) {
             // Create user
             case "/api/users":
                 // Kiểm tra tồn tại email
                 if (UserRepository.existByEmail(user.getEmail())) {
-                    body1 = "{\"message\": \"Email has already existed\"}";
-                    sendConflict(clientOs, body1);
+                    errorBody = ErrorCode.EMAIL_EXISTED;
+                    sendConflict(clientOs, errorBody);
                     return;
                 } else {
                     boolean checkSaveUser = UserRepository.saveUser(user.getFullName(), user.getPassword(), user.getEmail(), user.getPhoneNumber(), user.getAddress());
@@ -120,8 +122,8 @@ public class HandlerRequest {
                         sendResponse(clientOs, body1);
                         return;
                     } else {
-                        body1 = "{\"message\": \"Occur an error while create a new User\"}";
-                        sendBadRequest(clientOs, body1);
+                        errorBody = ErrorCode.ERROR_CREATE_USER;
+                        sendBadRequest(clientOs, errorBody);
                         return;
                     }
                 }
@@ -129,6 +131,12 @@ public class HandlerRequest {
                 // Login user
             case "/api/login":
 //                int iduser = UserRepository.loginUser(user.getEmail(), user.getPassword());
+                if(!UserRepository.existByEmail(user.getEmail())){
+                    errorBody = ErrorCode.EMAIL_NOT_FOUND;
+                    sendUnauthorized(clientOs, errorBody);
+                    return;
+                }
+
                 User userR = UserRepository.loginUser(user.getEmail(), user.getPassword());
                 Map<String, Object> bodyMap = new HashMap<>();
                 if (userR != null) {
@@ -140,9 +148,8 @@ public class HandlerRequest {
                     sendResponse(clientOs, body1);
                     return;
                 } else {
-                    bodyMap.put("message", "Email or password was wrong!");
-                    body1 = mapper.writeValueAsString(bodyMap);
-                    sendUnauthorized(clientOs, body1);
+                    errorBody = ErrorCode.UNAUTHORIZED;
+                    sendUnauthorized(clientOs, errorBody);
                     return;
                 }
             case "/api/users/":
@@ -166,26 +173,27 @@ public class HandlerRequest {
         // URL target -> /api/users/email%40gmail.com
         String fileName = request.getRequestTarget();
 //        int checkResponse = 0;
-        String body1 = "";  //body response
+        ErrorCode errorBody;
+        String body1 = "";
 
 //            Handling Update user's information
         String emailUser = fileName.substring("api/users/".length()); // Lấy email từ URL
         emailUser = URLDecoder.decode(emailUser, StandardCharsets.UTF_8).split("/")[1];
-        System.out.println("check email: " + emailUser);
+
         if (!UserRepository.existByEmail(emailUser)) {
-            body1 = "{\"message\": \"Email not exist\"}";
-            sendNotFound(clientOs, body1);
+            errorBody = ErrorCode.EMAIL_NOT_FOUND;
+            sendNotFound(clientOs, errorBody);
             return;
         } else if (UserRepository.loginUser(emailUser, userUpdate.getOldPassword()) == null) {
-            body1 = "{\"message\": \"Your Old Password was wrong\"}";
-            sendUnauthorized(clientOs, body1);
+            errorBody = ErrorCode.WRONG_PASSWORD;
+            sendUnauthorized(clientOs, errorBody);
             return;
         } else {
             boolean checkResponse = UserRepository.updateUser(userUpdate, emailUser);
             if (checkResponse) {
                 body1 = "{\"message\": \"Success\"}";
             } else {
-                sendBadRequest(clientOs, "{\"message\": \"Bad request\"}");
+                sendBadRequest(clientOs, ErrorCode.ERROR_UPDATE_USER);
             }
         }
 
@@ -203,27 +211,27 @@ public class HandlerRequest {
 
         // URL target
         String fileName = request.getRequestTarget();
-        String body1 = "";  //body response
+        ErrorCode errorBody;
+        String body1 = "";
 
-//            Handling Update user's information
+//            Handling Delete user's information
         String emailUser = fileName.substring("api/users/".length()); // Lấy email từ URL
         emailUser = URLDecoder.decode(emailUser, StandardCharsets.UTF_8).split("/")[1];
-        System.out.println("check email: " + emailUser);
 
         if (!UserRepository.existByEmail(emailUser)) {
-            body1 = "{\"message\": \"Email not exist\"}";
-            sendNotFound(clientOs, body1);
+            errorBody = ErrorCode.EMAIL_NOT_FOUND;
+            sendNotFound(clientOs, errorBody);
             return;
         }else if (UserRepository.loginUser(emailUser, user.getPassword()) == null) {
-            body1 = "{\"message\": \"Your Old Password was wrong\"}";
-            sendUnauthorized(clientOs, body1);
+            errorBody = ErrorCode.WRONG_PASSWORD;
+            sendUnauthorized(clientOs, errorBody);
             return;
         } else {
             boolean checkResponse = UserRepository.deleteUser(emailUser);
             if (checkResponse) {
                 body1 = "{\"message\": \"Success\"}";
             } else {
-                sendBadRequest(clientOs, "{\"message\": \"Bad Request\"}");
+                sendBadRequest(clientOs, ErrorCode.ERROR_DELETE_USER);
             }
         }
 
@@ -246,13 +254,16 @@ public class HandlerRequest {
     }
 
     public void sendResponse(OutputStream clientOs, String body) throws Exception {
+        int statusCode = HttpStatusCode.OK.STATUS_CODE;
+        String message = HttpStatusCode.OK.MESSAGE;
+
         JsonNode jsonNode = mapper.readTree(body);
 
         // Xây dựng nội dung phản hồi
         String jsonResponse = mapper.writeValueAsString(jsonNode);
 
         String httpResponse =
-                "HTTP/1.1 200 OK\r\n" +
+                "HTTP/1.1 " + statusCode + " " + message + "\r\n" +
                         "Content-Type: application/json; charset=UTF-8\r\n" +
                         "Content-Length: " + jsonResponse.getBytes(StandardCharsets.UTF_8).length + "\r\n" +
                         "Access-Control-Allow-Origin: *\r\n" +  // Để tránh lỗi CORS
@@ -264,10 +275,14 @@ public class HandlerRequest {
         clientOs.close();
     }
 
-    private void sendBadRequest(OutputStream clientOs, String jsonResponse) throws Exception {
+    private void sendBadRequest(OutputStream clientOs, ErrorCode errorCode) throws Exception {
+        int statusCode = errorCode.getHttpStatusCode().STATUS_CODE;
+        String messageHttp = errorCode.getHttpStatusCode().MESSAGE;
+
+        String jsonResponse = "{\"message\": " + "\"" + errorCode.getMessage() + "\"}";
         byte[] responseBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
         String httpResponse =
-                "HTTP/1.1 400 Bad Request\r\n" +
+                "HTTP/1.1 " + statusCode + " " + messageHttp + "\r\n" +
                         "Content-Type: application/json; charset=UTF-8\r\n" +
                         "Content-Length: " + responseBytes.length + "\r\n" +
                         "Access-Control-Allow-Origin: *\r\n" +  // Để tránh lỗi CORS
@@ -275,16 +290,20 @@ public class HandlerRequest {
                         "Access-Control-Allow-Headers: Content-Type, Authorization\r\n" +
                         "\r\n" +
                         jsonResponse;
-
+        System.out.println("Send bad request: " + httpResponse);
         clientOs.write(httpResponse.getBytes(StandardCharsets.UTF_8));
         clientOs.flush();
         clientOs.close();
     }
 
-    private void sendUnauthorized(OutputStream clientOs, String jsonResponse) throws Exception {
+    private void sendUnauthorized(OutputStream clientOs, ErrorCode errorCode) throws Exception {
+        int statusCode = errorCode.getHttpStatusCode().STATUS_CODE;
+        String messageHttp = errorCode.getHttpStatusCode().MESSAGE;
+
+        String jsonResponse = "{\"message\": " + "\"" + errorCode.getMessage() + "\"}";
         byte[] responseBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
         String httpResponse =
-                "HTTP/1.1 401 Unauthorized\r\n" +
+                "HTTP/1.1 " + statusCode + " " + messageHttp + "\r\n" +
                         "Content-Type: application/json; charset=UTF-8\r\n" +
                         "Content-Length: " + responseBytes.length + "\r\n" +
                         "Access-Control-Allow-Origin: *\r\n" +  // Để tránh lỗi CORS
@@ -292,16 +311,20 @@ public class HandlerRequest {
                         "Access-Control-Allow-Headers: Content-Type, Authorization\r\n" +
                         "\r\n" +
                         jsonResponse;
-
+        System.out.println("Send Unauthorized: " + httpResponse);
         clientOs.write(httpResponse.getBytes(StandardCharsets.UTF_8));
         clientOs.flush();
         clientOs.close();
     }
 
-    private void sendNotFound(OutputStream clientOs, String jsonResponse) throws Exception {
+    private void sendNotFound(OutputStream clientOs, ErrorCode errorCode) throws Exception {
+        int statusCode = errorCode.getHttpStatusCode().STATUS_CODE;
+        String messageHttp = errorCode.getHttpStatusCode().MESSAGE;
+
+        String jsonResponse = "{\"message\": " + "\"" + errorCode.getMessage() + "\"}";
         byte[] responseBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
         String httpResponse =
-                "HTTP/1.1 404 Not Found\r\n" +
+                "HTTP/1.1 " + statusCode + " " + messageHttp + "\r\n" +
                         "Content-Type: application/json; charset=UTF-8\r\n" +
                         "Content-Length: " + responseBytes.length + "\r\n" +
                         "Access-Control-Allow-Origin: *\r\n" +  // Để tránh lỗi CORS
@@ -310,15 +333,20 @@ public class HandlerRequest {
                         "\r\n" +
                         jsonResponse;
 
+        System.out.println("Send not found: " + httpResponse);
         clientOs.write(httpResponse.getBytes(StandardCharsets.UTF_8));
         clientOs.flush();
         clientOs.close();
     }
 
-    private void sendConflict(OutputStream clientOs, String jsonResponse) throws Exception {
+    private void sendConflict(OutputStream clientOs, ErrorCode errorCode) throws Exception {
+        int statusCode = errorCode.getHttpStatusCode().STATUS_CODE;
+        String messageHttp = errorCode.getHttpStatusCode().MESSAGE;
+
+        String jsonResponse = "{\"message\": " + "\"" + errorCode.getMessage() + "\"}";
         byte[] responseBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
         String httpResponse =
-                "HTTP/1.1 409 Conflict\r\n" +
+                "HTTP/1.1 " + statusCode + " " + messageHttp + "\r\n" +
                         "Content-Type: application/json; charset=UTF-8\r\n" +
                         "Content-Length: " + responseBytes.length + "\r\n" +
                         "Access-Control-Allow-Origin: *\r\n" +  // Để tránh lỗi CORS
@@ -327,6 +355,7 @@ public class HandlerRequest {
                         "\r\n" +
                         jsonResponse;
 
+        System.out.println("Send conflict: " + httpResponse);
         clientOs.write(httpResponse.getBytes(StandardCharsets.UTF_8));
         clientOs.flush();
         clientOs.close();

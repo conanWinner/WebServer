@@ -1,38 +1,32 @@
 package org.webserver.httpserver.exception;
 
-public enum ErrorCode {
-    EMAIL_EXISTED(409, "Conflict", "Email has already existed"),
-    EMAIL_NOT_FOUND(404, "Not Found", "Email not found"),
-    ERROR_CREATE_USER(400, "Bad Request", "Occur an error while create a new User"),
+import org.webserver.http.HttpStatusCode;
 
-    WRONG_PASSWORD(401, "Unauthorized", "Your Old Password was wrong"),
-    UNAUTHORIZED(401,"Unauthorized", "Email or password was wrong!"),
+public enum ErrorCode {
+    EMAIL_EXISTED(HttpStatusCode.CLIENT_ERROR_409_CONFLICT, "Email has already existed"),
+    EMAIL_NOT_FOUND(HttpStatusCode.CLIENT_ERROR_404_NOT_FOUND, "Email not found"),
+    ERROR_CREATE_USER(HttpStatusCode.CLIENT_ERROR_400_BAD_REQUEST, "Occur an error while create a new User"),
+    ERROR_DELETE_USER(HttpStatusCode.CLIENT_ERROR_400_BAD_REQUEST, "Occur an error while delete a user"),
+    ERROR_UPDATE_USER(HttpStatusCode.CLIENT_ERROR_400_BAD_REQUEST, "Occur an error while update a user"),
+    WRONG_PASSWORD(HttpStatusCode.CLIENT_ERROR_401_UNAUTHORIZED, "Your Old Password was wrong"),
+    UNAUTHORIZED(HttpStatusCode.CLIENT_ERROR_401_UNAUTHORIZED, "Email or password was wrong!"),
+
     ;
 
-    private int code;
-    private String httpStatus;
+    private HttpStatusCode httpStatusCode;
     private String message;
 
-    ErrorCode(int code, String httpStatus, String s) {
-        this.code = code;
-        this.httpStatus = httpStatus;
+    ErrorCode(HttpStatusCode httpStatusCode, String s) {
+        this.httpStatusCode = httpStatusCode;
         this.message = s;
     }
 
-    public int getCode() {
-        return code;
+    public HttpStatusCode getHttpStatusCode() {
+        return httpStatusCode;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getHttpStatus() {
-        return httpStatus;
-    }
-
-    public void setHttpStatus(String httpStatus) {
-        this.httpStatus = httpStatus;
+    public void setHttpStatusCode(HttpStatusCode httpStatusCode) {
+        this.httpStatusCode = httpStatusCode;
     }
 
     public String getMessage() {

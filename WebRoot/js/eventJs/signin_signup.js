@@ -1,7 +1,7 @@
 import { signin_url, signup_url, URLIndex } from "./common.js";
 
 $(document).ready(function () {
-// ======================= SIGN UP =======================
+  // ======================= SIGN UP =======================
   $("#form_signup").submit(function (e) {
     e.preventDefault();
 
@@ -12,19 +12,18 @@ $(document).ready(function () {
     const password = $("#signup_password").val();
     const re_password = $("#signup_password2").val();
 
-    const dataToSend =
-    {
-              fullName: fullName,
-              password: password,
-              email: email,
-              address: address,
-              phoneNumber: phoneNumber
-    }
+    const dataToSend = {
+      fullName: fullName,
+      password: password,
+      email: email,
+      address: address,
+      phoneNumber: phoneNumber,
+    };
     const jsonString = JSON.stringify(dataToSend, null, 2);
     if (re_password != password) {
       alert("Mật khẩu không trùng khớp");
     } else {
-    console.log("JSON to be sent:", dataToSend);
+      console.log("JSON to be sent:", dataToSend);
       $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
@@ -33,7 +32,7 @@ $(document).ready(function () {
         data: jsonString,
         success: function (response) {
           console.log(response);
-          if(response.message == "Success"){
+          if (response.message == "Success") {
             alert("Đăng ký thành công, vui lòng đăng nhập!");
           }
         },
@@ -45,7 +44,7 @@ $(document).ready(function () {
     }
   });
 
-// ======================= SIGN IN =======================
+  // ======================= SIGN IN =======================
   $("#form_signin").submit(function (e) {
     e.preventDefault();
 
@@ -59,10 +58,11 @@ $(document).ready(function () {
       url: signin_url,
       data: JSON.stringify({ email, password }),
       success: function (response) {
-        if(response.message == "Success"){
-            sessionStorage.setItem("User", JSON.stringify(response.result));
-            alert("Đăng nhập thành công");
-            window.location.href = URLIndex;
+        if (response.message == "Success") {
+          const user = JSON.parse(response.result);
+          sessionStorage.setItem("User", JSON.stringify(user, null, 2));
+          alert("Đăng nhập thành công");
+          window.location.href = URLIndex;
         }
       },
       error: function (error) {
