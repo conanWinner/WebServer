@@ -7,6 +7,7 @@ import org.webserver.http.HttpRequest;
 import org.webserver.http.HttpStatusCode;
 import org.webserver.httpserver.entity.User;
 import org.webserver.httpserver.entity.UserUpdate;
+import org.webserver.httpserver.exception.AppException;
 import org.webserver.httpserver.exception.ErrorCode;
 import org.webserver.httpserver.repository.UserRepository;
 import org.webserver.httpserver.util.Json;
@@ -113,7 +114,7 @@ public class HandlerRequest {
                 // Kiểm tra tồn tại email
                 if (UserRepository.existByEmail(user.getEmail())) {
                     errorBody = ErrorCode.EMAIL_EXISTED;
-                    sendConflict(clientOs, errorBody);
+                    AppException.sendConflict(clientOs, errorBody);
                     return;
                 } else {
                     boolean checkSaveUser = UserRepository.saveUser(user.getFullName(), user.getPassword(), user.getEmail(), user.getPhoneNumber(), user.getAddress());
@@ -123,7 +124,7 @@ public class HandlerRequest {
                         return;
                     } else {
                         errorBody = ErrorCode.ERROR_CREATE_USER;
-                        sendBadRequest(clientOs, errorBody);
+                        AppException.sendBadRequest(clientOs, errorBody);
                         return;
                     }
                 }
@@ -133,7 +134,7 @@ public class HandlerRequest {
 //                int iduser = UserRepository.loginUser(user.getEmail(), user.getPassword());
                 if(!UserRepository.existByEmail(user.getEmail())){
                     errorBody = ErrorCode.EMAIL_NOT_FOUND;
-                    sendUnauthorized(clientOs, errorBody);
+                    AppException.sendUnauthorized(clientOs, errorBody);
                     return;
                 }
 
@@ -149,7 +150,7 @@ public class HandlerRequest {
                     return;
                 } else {
                     errorBody = ErrorCode.UNAUTHORIZED;
-                    sendUnauthorized(clientOs, errorBody);
+                    AppException.sendUnauthorized(clientOs, errorBody);
                     return;
                 }
             case "/api/users/":
@@ -182,18 +183,18 @@ public class HandlerRequest {
 
         if (!UserRepository.existByEmail(emailUser)) {
             errorBody = ErrorCode.EMAIL_NOT_FOUND;
-            sendNotFound(clientOs, errorBody);
+            AppException.sendNotFound(clientOs, errorBody);
             return;
         } else if (UserRepository.loginUser(emailUser, userUpdate.getOldPassword()) == null) {
             errorBody = ErrorCode.WRONG_PASSWORD;
-            sendUnauthorized(clientOs, errorBody);
+            AppException.sendUnauthorized(clientOs, errorBody);
             return;
         } else {
             boolean checkResponse = UserRepository.updateUser(userUpdate, emailUser);
             if (checkResponse) {
                 body1 = "{\"message\": \"Success\"}";
             } else {
-                sendBadRequest(clientOs, ErrorCode.ERROR_UPDATE_USER);
+                AppException.sendBadRequest(clientOs, ErrorCode.ERROR_UPDATE_USER);
             }
         }
 
@@ -220,18 +221,18 @@ public class HandlerRequest {
 
         if (!UserRepository.existByEmail(emailUser)) {
             errorBody = ErrorCode.EMAIL_NOT_FOUND;
-            sendNotFound(clientOs, errorBody);
+            AppException.sendNotFound(clientOs, errorBody);
             return;
         }else if (UserRepository.loginUser(emailUser, user.getPassword()) == null) {
             errorBody = ErrorCode.WRONG_PASSWORD;
-            sendUnauthorized(clientOs, errorBody);
+            AppException.sendUnauthorized(clientOs, errorBody);
             return;
         } else {
             boolean checkResponse = UserRepository.deleteUser(emailUser);
             if (checkResponse) {
                 body1 = "{\"message\": \"Success\"}";
             } else {
-                sendBadRequest(clientOs, ErrorCode.ERROR_DELETE_USER);
+                AppException.sendBadRequest(clientOs, ErrorCode.ERROR_DELETE_USER);
             }
         }
 
@@ -275,91 +276,7 @@ public class HandlerRequest {
         clientOs.close();
     }
 
-    private void sendBadRequest(OutputStream clientOs, ErrorCode errorCode) throws Exception {
-        int statusCode = errorCode.getHttpStatusCode().STATUS_CODE;
-        String messageHttp = errorCode.getHttpStatusCode().MESSAGE;
 
-        String jsonResponse = "{\"message\": " + "\"" + errorCode.getMessage() + "\"}";
-        byte[] responseBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
-        String httpResponse =
-                "HTTP/1.1 " + statusCode + " " + messageHttp + "\r\n" +
-                        "Content-Type: application/json; charset=UTF-8\r\n" +
-                        "Content-Length: " + responseBytes.length + "\r\n" +
-                        "Access-Control-Allow-Origin: *\r\n" +  // Để tránh lỗi CORS
-                        "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n" +
-                        "Access-Control-Allow-Headers: Content-Type, Authorization\r\n" +
-                        "\r\n" +
-                        jsonResponse;
-        System.out.println("Send bad request: " + httpResponse);
-        clientOs.write(httpResponse.getBytes(StandardCharsets.UTF_8));
-        clientOs.flush();
-        clientOs.close();
-    }
-
-    private void sendUnauthorized(OutputStream clientOs, ErrorCode errorCode) throws Exception {
-        int statusCode = errorCode.getHttpStatusCode().STATUS_CODE;
-        String messageHttp = errorCode.getHttpStatusCode().MESSAGE;
-
-        String jsonResponse = "{\"message\": " + "\"" + errorCode.getMessage() + "\"}";
-        byte[] responseBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
-        String httpResponse =
-                "HTTP/1.1 " + statusCode + " " + messageHttp + "\r\n" +
-                        "Content-Type: application/json; charset=UTF-8\r\n" +
-                        "Content-Length: " + responseBytes.length + "\r\n" +
-                        "Access-Control-Allow-Origin: *\r\n" +  // Để tránh lỗi CORS
-                        "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n" +
-                        "Access-Control-Allow-Headers: Content-Type, Authorization\r\n" +
-                        "\r\n" +
-                        jsonResponse;
-        System.out.println("Send Unauthorized: " + httpResponse);
-        clientOs.write(httpResponse.getBytes(StandardCharsets.UTF_8));
-        clientOs.flush();
-        clientOs.close();
-    }
-
-    private void sendNotFound(OutputStream clientOs, ErrorCode errorCode) throws Exception {
-        int statusCode = errorCode.getHttpStatusCode().STATUS_CODE;
-        String messageHttp = errorCode.getHttpStatusCode().MESSAGE;
-
-        String jsonResponse = "{\"message\": " + "\"" + errorCode.getMessage() + "\"}";
-        byte[] responseBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
-        String httpResponse =
-                "HTTP/1.1 " + statusCode + " " + messageHttp + "\r\n" +
-                        "Content-Type: application/json; charset=UTF-8\r\n" +
-                        "Content-Length: " + responseBytes.length + "\r\n" +
-                        "Access-Control-Allow-Origin: *\r\n" +  // Để tránh lỗi CORS
-                        "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n" +
-                        "Access-Control-Allow-Headers: Content-Type, Authorization\r\n" +
-                        "\r\n" +
-                        jsonResponse;
-
-        System.out.println("Send not found: " + httpResponse);
-        clientOs.write(httpResponse.getBytes(StandardCharsets.UTF_8));
-        clientOs.flush();
-        clientOs.close();
-    }
-
-    private void sendConflict(OutputStream clientOs, ErrorCode errorCode) throws Exception {
-        int statusCode = errorCode.getHttpStatusCode().STATUS_CODE;
-        String messageHttp = errorCode.getHttpStatusCode().MESSAGE;
-
-        String jsonResponse = "{\"message\": " + "\"" + errorCode.getMessage() + "\"}";
-        byte[] responseBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
-        String httpResponse =
-                "HTTP/1.1 " + statusCode + " " + messageHttp + "\r\n" +
-                        "Content-Type: application/json; charset=UTF-8\r\n" +
-                        "Content-Length: " + responseBytes.length + "\r\n" +
-                        "Access-Control-Allow-Origin: *\r\n" +  // Để tránh lỗi CORS
-                        "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n" +
-                        "Access-Control-Allow-Headers: Content-Type, Authorization\r\n" +
-                        "\r\n" +
-                        jsonResponse;
-
-        System.out.println("Send conflict: " + httpResponse);
-        clientOs.write(httpResponse.getBytes(StandardCharsets.UTF_8));
-        clientOs.flush();
-        clientOs.close();
-    }
 
 
 }
