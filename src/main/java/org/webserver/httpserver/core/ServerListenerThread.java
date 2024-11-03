@@ -55,15 +55,6 @@ public class ServerListenerThread extends Thread{
         this.serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(this.port, 50, InetAddress.getByName(this.localhost));
         this.serverSocket.setEnabledProtocols(new String[]{"TLSv1.2", "TLSv1.3", "TLSv1.1", "TLSv1"});
         this.serverSocket.setEnabledCipherSuites(this.serverSocket.getSupportedCipherSuites());
-//        this.serverSocket.setEnabledCipherSuites(new String[]{
-//                "TLS_AES_256_GCM_SHA384",
-//                "TLS_AES_128_GCM_SHA256",
-//                "TLS_CHACHA20_POLY1305_SHA256",
-//                "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-//                "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
-//                "TLS_RSA_WITH_AES_256_GCM_SHA384",
-//                "TLS_RSA_WITH_AES_128_GCM_SHA256"
-//        });
 
         System.out.println("Supported protocols: " + Arrays.toString(this.serverSocket.getSupportedProtocols()));
         System.out.println("Enabled protocols: " + Arrays.toString(this.serverSocket.getEnabledProtocols()));

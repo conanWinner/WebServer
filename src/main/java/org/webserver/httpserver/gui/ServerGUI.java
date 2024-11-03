@@ -2,6 +2,7 @@ package org.webserver.httpserver.gui;
 
 import org.webserver.httpserver.config.Configuration;
 import org.webserver.httpserver.config.ConfigurationManager;
+import org.webserver.httpserver.core.ServerListenerHttp;
 import org.webserver.httpserver.core.ServerListenerThread;
 import org.webserver.httpserver.util.FormatTime;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 
 public class ServerGUI {
     private ServerListenerThread serverListener;
+    private ServerListenerHttp serverListenerHttp;
     private Configuration conf;
     private Set<String> setBlackList = ServerListenerThread.setBlackList;
 
@@ -69,17 +71,6 @@ public class ServerGUI {
         startButton.addActionListener(e -> startServer());
         stopButton.addActionListener(e -> stopServer());
 
-//        stopButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                logArea.append("Stopping server...\n");
-//                serverListener.interrupt();  // Dừng luồng
-//                ServerListenerThread.isRunning = false;
-//                startButton.setEnabled(true);
-//                stopButton.setEnabled(false);
-//            }
-//        });
-
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -120,13 +111,15 @@ public class ServerGUI {
     private void startServer() {
         new Thread(() -> {
             try {
-                logArea.append("Starting server...\n");
+                logArea.append("Starting server http ... - on Port: " + conf.getPort() + "\n");
                 startButton.setEnabled(false);
                 stopButton.setEnabled(true);
 
-                serverListener = new ServerListenerThread(conf.getPort(), conf.getWebroot(), conf.getLocalhost());
+                serverListenerHttp = new ServerListenerHttp(conf.getPort(), 443, conf.getLocalhost());
+                serverListener = new ServerListenerThread(443, conf.getWebroot(), conf.getLocalhost());
                 serverListener.setConnectionCountCallback(this::GUIupdateConnectionCount);
                 serverListener.setConnectionListCallback(this::GUIaddActiveUser);
+                serverListenerHttp.start();
                 serverListener.start();
 
 

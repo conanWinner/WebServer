@@ -1,4 +1,4 @@
-package org.webserver.httpserver.repository;
+package org.webserver.httpserver.repository.config;
 
 public class ConfigurationDB {
     protected static final String DB_URL = "jdbc:mysql://localhost:3306/webserver";

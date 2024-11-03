@@ -2,7 +2,7 @@ package org.webserver.httpserver.repository;
 
 import org.webserver.httpserver.entity.User;
 import org.webserver.httpserver.entity.UserUpdate;
-import org.webserver.httpserver.exception.ErrorCode;
+import org.webserver.httpserver.repository.config.ConfigurationDB;
 
 import java.sql.*;
 
