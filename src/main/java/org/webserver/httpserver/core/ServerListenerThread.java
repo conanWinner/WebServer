@@ -3,10 +3,16 @@ package org.webserver.httpserver.core;
 import org.webserver.httpserver.gui.ServerGUI;
 import org.webserver.httpserver.util.FormatTime;
 
+import javax.net.ssl.*;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -16,7 +22,7 @@ public class ServerListenerThread extends Thread{
     private int port;
     private String webroot;
     private String localhost;
-    private ServerSocket  serverSocket;
+    private SSLServerSocket   serverSocket;
     private ServerGUI gui;
     public static volatile boolean isRunning = false;
 
@@ -27,11 +33,43 @@ public class ServerListenerThread extends Thread{
     private Consumer<String> connectionListCallback;
 
 
-    public ServerListenerThread(int port, String webroot, String localhost) throws IOException {
+    public ServerListenerThread(int port, String webroot, String localhost) throws IOException, NoSuchAlgorithmException, KeyStoreException, CertificateException, UnrecoverableKeyException, KeyManagementException {
         this.port = port;
         this.webroot = webroot;
         this.localhost = localhost;
-        this.serverSocket = new ServerSocket(this.port, 50, InetAddress.getByName(this.localhost));
+
+//        Tạo và cấu hình SSLContext
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+
+//        Tải KeyStore (chứa chứng chỉ SSL/TLS của mình)
+        try (InputStream keyStoreStream = new FileInputStream("keystore.jks")) {
+            keyStore.load(keyStoreStream, "0905640692t".toCharArray());
+        }
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+        keyManagerFactory.init(keyStore, "0905640692t".toCharArray());
+        sslContext.init(keyManagerFactory.getKeyManagers(), null, null);
+
+//        Tạo SSLServerSocket từ SSLServerSocketFactory
+        SSLServerSocketFactory sslServerSocketFactory = sslContext.getServerSocketFactory();
+        this.serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(this.port, 50, InetAddress.getByName(this.localhost));
+        this.serverSocket.setEnabledProtocols(new String[]{"TLSv1.2", "TLSv1.3", "TLSv1.1", "TLSv1"});
+        this.serverSocket.setEnabledCipherSuites(this.serverSocket.getSupportedCipherSuites());
+//        this.serverSocket.setEnabledCipherSuites(new String[]{
+//                "TLS_AES_256_GCM_SHA384",
+//                "TLS_AES_128_GCM_SHA256",
+//                "TLS_CHACHA20_POLY1305_SHA256",
+//                "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+//                "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+//                "TLS_RSA_WITH_AES_256_GCM_SHA384",
+//                "TLS_RSA_WITH_AES_128_GCM_SHA256"
+//        });
+
+        System.out.println("Supported protocols: " + Arrays.toString(this.serverSocket.getSupportedProtocols()));
+        System.out.println("Enabled protocols: " + Arrays.toString(this.serverSocket.getEnabledProtocols()));
+        System.out.println("Supported cipher suites: " + Arrays.toString(this.serverSocket.getSupportedCipherSuites()));
+        System.out.println("Enabled cipher suites: " + Arrays.toString(this.serverSocket.getEnabledCipherSuites()));
+
     }
 
     public void setConnectionCountCallback(Consumer<Integer> connectionCountCallback) {
@@ -50,7 +88,7 @@ public class ServerListenerThread extends Thread{
         try {
             isRunning = true;
             while(isRunning && serverSocket.isBound() && !serverSocket.isClosed() ){
-                Socket socket = serverSocket.accept();
+                SSLSocket socket = (SSLSocket) serverSocket.accept();
                 String clientIp = socket.getInetAddress().getHostAddress();
                 if (setBlackList.contains(clientIp)) {
                     socket.close(); // Đóng socket

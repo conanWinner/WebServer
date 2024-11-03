@@ -6,6 +6,9 @@ import org.webserver.http.HttpMethod;
 import org.webserver.http.HttpParser;
 import org.webserver.http.HttpParsingException;
 import org.webserver.http.HttpRequest;
+
+import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLSocket;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,9 +18,9 @@ import java.nio.charset.StandardCharsets;
 
 public class HttpConnectionWorkerThread extends Thread{
 
-    private Socket socket;
+    private SSLSocket socket;
 
-    public HttpConnectionWorkerThread(Socket socket) {
+    public HttpConnectionWorkerThread(SSLSocket socket) {
         this.socket = socket;
     }
 
@@ -98,10 +101,12 @@ public class HttpConnectionWorkerThread extends Thread{
                 os.flush();
             }
 
-        }catch (IOException e) {
-            throw new RuntimeException(e);
+        }catch (SSLHandshakeException e) {
+            System.err.println("SSL handshake failed: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("IO error: " + e.getMessage());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.err.println("Unexpected error: " + e.getMessage());
         } finally {
             try {
                 if(is != null){

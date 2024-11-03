@@ -129,8 +129,11 @@ public class ServerGUI {
                 serverListener.setConnectionListCallback(this::GUIaddActiveUser);
                 serverListener.start();
 
+
             } catch (Exception ex) {
                 logArea.append("Failed to start server: " + ex.getMessage() + "\n");
+                startButton.setEnabled(true);
+                stopButton.setEnabled(false);
             }
         }).start();
     }
