@@ -1,4 +1,4 @@
-package org.webserver.httpserver.util;
+package org.webserver.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
