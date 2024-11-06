@@ -17,6 +17,11 @@ Creation Web Server From Craft
 #### DELETE
 - [/api/users/$email_user](): _delete user_
 
+## =============== Đóng gói jar và chạy ứng dụng ============
+- `mvn clean package`
+- `java -jar target/httpserver-1.0-SNAPSHOT.jar`
+
+
 ## =============== Quy tắc Commit Messages ============
 
 Dưới đây là các quy tắc để viết thông điệp commit. Hãy tuân thủ các mẫu này để giữ cho lịch sử commit của bạn rõ ràng và có tổ chức:
