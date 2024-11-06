@@ -5,92 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9133bf40-c1ad-4576-9919-98e08dd4f95a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/blog.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/contact.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/css/animate.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/css/aos.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/css/bootstrap-datepicker.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/css/bootstrap.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/css/fl-bigmug-line.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/css/jquery-ui.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/css/magnific-popup.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/css/owl.carousel.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/css/owl.theme.default.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/css/owl.video.play.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/css/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/domain.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/bigmug-line/fl-bigmug-line.eot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/bigmug-line/fl-bigmug-line.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/bigmug-line/fl-bigmug-line.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/bigmug-line/fl-bigmug-line.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/Flaticon.eot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/Flaticon.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/Flaticon.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/Flaticon.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/Flaticond41d.eot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/flaticon/font/flaticon.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/icomoon/fonts/icomoon1a44.eot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/icomoon/fonts/icomoon1a44.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/icomoon/fonts/icomoon1a44.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/icomoon/fonts/icomoon1a44.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/fonts/icomoon/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/hosting.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/images/hero_bg_1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/images/hero_bg_2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/images/hero_bg_3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/images/img_1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/images/img_2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/images/img_3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/images/img_4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/images/person_1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/images/person_2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/index-2.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/aos.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/bootstrap-datepicker.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/bootstrap.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/eventJs/checkLogin.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/eventJs/common.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/eventJs/personal_page.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/eventJs/signin_signup.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/jquery-3.3.1.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/jquery-ui.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/jquery.countdown.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/jquery.magnific-popup.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/jquery.stellar.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/owl.carousel.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/js/popper.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebRoot/register.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/HttpServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/http/BadHttpVersionException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpMessage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpMethod.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpParser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpParsingException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpStatusCode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/http/HttpVersion.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/config/Configuration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/config/Configuration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/config/ConfigurationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/config/ConfigurationManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/config/HttpConfigurationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/config/HttpConfigurationException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HandlerRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/HttpConnectionWorkerThread.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/ServerListenerThread.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/io/WebRootHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/core/io/WebRootNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/entity/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/entity/UserUpdate.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/exception/ErrorCode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/gui/ServerGUI.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/repository/ConfigurationDB.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/repository/UserRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/util/DecodeJson.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/util/DecodeJson.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/util/EndcodeJson.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/util/EndcodeJson.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/util/FormatTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/util/FormatTime.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/httpserver/util/Json.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/util/Json.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/util/FileUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/config/Configuration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/config/Configuration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/config/ConfigurationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/config/ConfigurationManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/config/HttpConfigurationException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/entity/WebService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/entity/WebService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/http.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/http.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +64,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "hosting",
+    "git-widget-placeholder": "hosting__server",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "19",
     "kotlin-language-version-configured": "true",

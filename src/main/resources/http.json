@@ -1,5 +1,4 @@
 {
   "localhost": "localhost",
-  "port": 8090,
-  "webroot": "/webserver"
+  "port": 8090
 }

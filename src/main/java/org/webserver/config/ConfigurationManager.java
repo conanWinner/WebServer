@@ -30,7 +30,8 @@ public class ConfigurationManager {
         try {
             fileReader = new FileReader(filePath);
         } catch (FileNotFoundException e) {
-            throw new HttpConfigurationException(e);
+            System.err.println(e);
+            throw new RuntimeException(e);
         }
         StringBuffer sb = new StringBuffer();
         int i;
@@ -39,8 +40,8 @@ public class ConfigurationManager {
                 sb.append((char)i);
             }
         }catch (IOException e) {
-            throw new HttpConfigurationException(e);
-
+            System.err.println(e);
+            throw new RuntimeException(e);
         }
         JsonNode conf = null;
         try {
@@ -58,7 +59,7 @@ public class ConfigurationManager {
     //Returns the current loaded config
     public Configuration getCurrentConfiguration() {
         if (myCurrentConfiguration == null) {
-            throw new HttpConfigurationException("No configuration set");
+            System.err.println("No configuration set");
         }
         return myCurrentConfiguration;
     }
