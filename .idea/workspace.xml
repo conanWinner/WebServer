@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="9133bf40-c1ad-4576-9919-98e08dd4f95a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/entity/WebService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/entity/WebService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/gui/ServerGUI.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,13 +43,13 @@
   <component name="ProjectId" id="2mNGcUk9UGHrZ9FZEanUsOYJqZe" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.HttpServer.executor": "Run",
     "Application.Main.executor": "Run",
+    "Application.ServerGUI.executor": "Run",
     "DefaultHtmlFileTemplate": "HTML File",
     "JUnit.HandlerRequestTest.executor": "Debug",
     "JUnit.HttpHeadersParserTest.executor": "Run",
@@ -95,13 +97,26 @@
       <recent name="org.webserver.http" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.HttpServer">
+  <component name="RunManager" selected="Application.ServerGUI">
     <configuration name="HttpServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.webserver.HttpServer" />
       <module name="httpserver" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="org.webserver.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServerGUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.webserver.gui.ServerGUI" />
+      <module name="httpserver" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.webserver.gui.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -158,6 +173,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ServerGUI" />
         <item itemvalue="Application.HttpServer" />
         <item itemvalue="JUnit.HttpParserTest" />
         <item itemvalue="JUnit.HttpParserTest.parseHttpRequest" />

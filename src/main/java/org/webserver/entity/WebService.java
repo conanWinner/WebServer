@@ -6,13 +6,14 @@ public class WebService {
     private String IPHost;
     private String port;
     private String subDomain;
-
-    public WebService(String serviceName, String status, String IPHost, String port, String subDomain) {
+    private String username;
+    public WebService(String serviceName, String status, String IPHost, String port, String subDomain, String username) {
         this.serviceName = serviceName;
         this.status = status;
         this.IPHost = IPHost;
         this.port = port;
         this.subDomain = subDomain;
+        this.username = username;
     }
 
     public String getServiceName() {
