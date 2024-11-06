@@ -1,13 +1,12 @@
 package org.webserver.repository;
 
-import org.webserver.entity.User;
 import org.webserver.entity.WebService;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceRepository {
+public class WebServiceRepository {
     private static Connection connect() throws Exception {
         return DriverManager.getConnection(ConfigurationDB.DB_URL, ConfigurationDB.USER, ConfigurationDB.PASSWORD);
     }
