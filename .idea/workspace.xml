@@ -6,9 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="9133bf40-c1ad-4576-9919-98e08dd4f95a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/core/WorkerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/core/WorkerThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/MainHostingServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/MainHostingServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/core/Server.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/core/WorkerThread.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/repository/ServiceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/webserver/repository/WebServiceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/gui/ServerGUI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/repository/ConfigurationDB.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/repository/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/webserver/repository/WebServiceRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/webserver/http/HttpHeadersParserTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/webserver/http/HttpParserTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/webserver/http/HttpVersionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/webserver/httpserver/core/HandlerRequestTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/webserver/httpserver/core/io/WebRootHandlerTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +58,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.ClientSide.executor": "Run",
     "Application.HttpServer.executor": "Run",
+    "Application.LoginGUI.executor": "Run",
     "Application.Main.executor": "Run",
     "Application.ServerGUI.executor": "Run",
     "DefaultHtmlFileTemplate": "HTML File",
@@ -63,7 +75,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "hosting__server",
+    "git-widget-placeholder": "hosting__client",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "19",
     "kotlin-language-version-configured": "true",
@@ -98,89 +110,14 @@
       <recent name="org.webserver.http" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ServerGUI">
-    <configuration name="HttpServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.webserver.HttpServer" />
+  <component name="RunManager">
+    <configuration name="ClientSide" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="org.webserver.MainHostingServer" />
       <module name="httpserver" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.webserver.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ServerGUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.webserver.gui.ServerGUI" />
-      <module name="httpserver" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.webserver.gui.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="HttpParserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="httpserver" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.webserver.http.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.webserver.http" />
-      <option name="MAIN_CLASS_NAME" value="org.webserver.http.HttpParserTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="HttpParserTest.parseHttpRequest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="httpserver" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.webserver.http.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.webserver.http" />
-      <option name="MAIN_CLASS_NAME" value="org.webserver.http.HttpParserTest" />
-      <option name="METHOD_NAME" value="parseHttpRequest" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="HttpVersionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="httpserver" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.webserver.http.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.webserver.http" />
-      <option name="MAIN_CLASS_NAME" value="org.webserver.http.HttpVersionTest" />
-      <option name="METHOD_NAME" value="" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.ServerGUI" />
-        <item itemvalue="Application.HttpServer" />
-        <item itemvalue="JUnit.HttpParserTest" />
-        <item itemvalue="JUnit.HttpParserTest.parseHttpRequest" />
-        <item itemvalue="JUnit.HttpVersionTest" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
