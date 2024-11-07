@@ -15,7 +15,7 @@ public class UserRepository {
     // Check login
     public static User loginUser(String username, String password) throws Exception {
         try (Connection connection = connect()) {
-            String query = "SELECT * FROM user WHERE username = ? AND password = ?";
+            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
             PreparedStatement ps = connection.prepareStatement(query);
 
             ps.setString(1, username);
@@ -26,8 +26,6 @@ public class UserRepository {
             if (rs.next()) {
                 String usernameR = rs.getString("username");
                 String passwordR = rs.getString("password");
-
-
                 return new User(usernameR, passwordR);
             }
         }

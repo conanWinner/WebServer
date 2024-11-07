@@ -18,7 +18,9 @@ public class Server {
             this.serverSocket = new ServerSocket(this.port, 50, InetAddress.getByName(this.localhost));
             while (serverSocket.isBound() && !serverSocket.isClosed()) {
                 Socket socket = serverSocket.accept();
+                String clientIP = socket.getInetAddress().getHostAddress();
 
+                System.out.println("client ip: " + clientIP);
                 WorkerThread workerThread = new WorkerThread(socket);
                 workerThread.start();
             }
