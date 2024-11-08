@@ -48,6 +48,9 @@ public class WorkerThread extends Thread {
                     case "login":
                         if (handleMessage != null) handleMessage.handleLogin();
                         break;
+                    case "get all webservices":
+                        if (handleMessage != null) handleMessage.handleGetAllWebServices();
+                        break;
                     case "create webservice":
                         if (handleMessage != null) handleMessage.handleLogin();
                         break;

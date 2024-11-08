@@ -1,11 +1,15 @@
 package org.webserver.repository;
 
+import org.webserver.dto.reponse.WebServiceResponse;
 import org.webserver.entity.User;
+import org.webserver.entity.WebService;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserRepository {
     private static Connection connect() throws Exception {
@@ -31,4 +35,6 @@ public class UserRepository {
         }
         return null;
     }
+
+
 }

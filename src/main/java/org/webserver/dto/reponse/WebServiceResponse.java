@@ -1,6 +1,10 @@
-package org.webserver.entity;
+package org.webserver.dto.reponse;
 
-public class WebService {
+import org.webserver.entity.WebService;
+
+import java.util.List;
+
+public class WebServiceResponse {
     private String serviceName;
     private String status;
     private String IPHost;
@@ -8,10 +12,10 @@ public class WebService {
     private String subDomain;
     private String username;
 
-    public WebService() {
+    public WebServiceResponse() {
     }
 
-    public WebService(String serviceName, String status, String IPHost, int port, String subDomain, String username) {
+    public WebServiceResponse(String serviceName, String status, String IPHost, int port, String subDomain, String username) {
         this.serviceName = serviceName;
         this.status = status;
         this.IPHost = IPHost;
@@ -62,5 +66,9 @@ public class WebService {
 
     public String getUsername() {
         return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

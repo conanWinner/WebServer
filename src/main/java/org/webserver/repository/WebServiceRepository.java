@@ -1,5 +1,6 @@
 package org.webserver.repository;
 
+import org.webserver.dto.reponse.WebServiceResponse;
 import org.webserver.entity.WebService;
 
 import java.sql.*;
@@ -13,33 +14,32 @@ public class WebServiceRepository {
 
 
     // Hàm lấy danh sách tài khoản từ MySQL
-    public static List<WebService> loadWebService() {
+    public static List<WebServiceResponse> getAllWebServices(String username) throws Exception {
+        try (Connection connection = connect()) {
+            String query = "SELECT * FROM webservices WHERE username = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
 
-        try (Connection conn = connect()) {
+            ps.setString(1, username);
 
-            List<WebService> webServices = new ArrayList<>();
+            try (ResultSet rs = ps.executeQuery()) {
+                List<WebServiceResponse> webServiceResponses = new ArrayList<>();
 
-            String query = "SELECT * FROM webservice";
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            ResultSet rs = pstmt.executeQuery();
+                // Duyệt qua các kết quả trả về từ cơ sở dữ liệu
+                while (rs.next()) {
+                    WebServiceResponse webServiceResponse = new WebServiceResponse();
+                    webServiceResponse.setServiceName(rs.getString("serviceName"));
+                    webServiceResponse.setStatus(rs.getString("status"));
+                    webServiceResponse.setIPHost(rs.getString("IPHost"));
+                    webServiceResponse.setPort(rs.getInt("port"));
+                    webServiceResponse.setSubDomain(rs.getString("subDomain"));
+                    webServiceResponse.setUsername(rs.getString("username"));
 
-            while (rs.next()) {
-                String serviceName = rs.getString("serviceName");
-                String status = rs.getString("status");
-                String IPHost = rs.getString("IPHost");
-                String port = rs.getString("port");
-                String subDomain = rs.getString("subDomain");
-                String username = rs.getString("username");
+                    webServiceResponses.add(webServiceResponse);
+                }
 
-                webServices.add(new WebService(serviceName, status, IPHost, port, subDomain, username));
-
+                // Trả về danh sách các web service
+                return webServiceResponses;
             }
-
-            return webServices;
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return null;
     }
 }
