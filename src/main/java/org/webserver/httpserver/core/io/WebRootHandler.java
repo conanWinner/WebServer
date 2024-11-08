@@ -1,16 +1,20 @@
 package org.webserver.httpserver.core.io;
 
-import java.io.File;
+
+import java.io.InputStream;
+
+
 
 public class WebRootHandler {
 
-    private File webRoot;
+    private InputStream webRoot;
 
     public WebRootHandler(String webRootPath) throws WebRootNotFoundException {
-        webRoot = new File(webRootPath);
-        if (!webRoot.exists() || !webRoot.isDirectory()) {
+        webRoot = getClass().getClassLoader().getResourceAsStream(webRootPath);
+        if (webRoot == null){
             throw new WebRootNotFoundException("Webroot provided does not exist or is not a folder");
         }
     }
 
 }
+

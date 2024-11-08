@@ -1,6 +1,5 @@
 package org.webserver.util;
 
-import org.webserver.common.Constants;
 import org.webserver.httpserver.core.io.WebRootHandler;
 import org.webserver.httpserver.core.io.WebRootNotFoundException;
 
@@ -44,11 +43,6 @@ public class FileUtils {
 
     public static InputStream getInputStream(String fileName) {
         try {
-            WebRootHandler webRootHandler = new WebRootHandler(fileName);
-        } catch (WebRootNotFoundException e) {
-        }
-
-        try {
             // Đọc nội dung file HTML thành chuỗi
             String htmlContent = readHtmlFile(fileName);
 
@@ -74,10 +68,13 @@ public class FileUtils {
     // Phương thức đọc file HTML thành chuỗi
     private static String readHtmlFile(String filePath) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                contentBuilder.append(line).append("\n");
+        InputStream inputStream = FileUtils.class.getClassLoader().getResourceAsStream(filePath);
+        if (inputStream != null) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    contentBuilder.append(line).append("\n");
+                }
             }
         }
         return contentBuilder.toString();

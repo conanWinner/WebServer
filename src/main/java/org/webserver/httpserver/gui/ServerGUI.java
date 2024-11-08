@@ -115,8 +115,8 @@ public class ServerGUI {
                 startButton.setEnabled(false);
                 stopButton.setEnabled(true);
 
-                serverListenerHttp = new ServerListenerHttp(conf.getPort(), 443, conf.getLocalhost());
-                serverListener = new ServerListenerThread(443, conf.getWebroot(), conf.getLocalhost());
+                serverListenerHttp = new ServerListenerHttp(conf.getPort(), 1443, conf.getLocalhost());
+                serverListener = new ServerListenerThread(1443, conf.getWebroot(), conf.getLocalhost());
                 serverListener.setConnectionCountCallback(this::GUIupdateConnectionCount);
                 serverListener.setConnectionListCallback(this::GUIaddActiveUser);
                 serverListenerHttp.start();

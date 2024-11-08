@@ -24,6 +24,7 @@ public class ConfigurationManager {
 
     //used to load a config file by file path
     public void loadConfigurationFile(String filePath) {
+        // Load from /resources
         StringBuffer sb = new StringBuffer();
         try(InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath)){
             if(inputStream != null){
