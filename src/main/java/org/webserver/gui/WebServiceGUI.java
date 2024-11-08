@@ -171,7 +171,9 @@ public class WebServiceGUI extends javax.swing.JFrame {
     }
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        LoginGUI loginGUI = new LoginGUI(client);
+        loginGUI.setVisible(true);
+        this.dispose();
     }
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {
