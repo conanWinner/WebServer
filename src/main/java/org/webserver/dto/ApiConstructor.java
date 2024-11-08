@@ -4,6 +4,9 @@ public class ApiConstructor<T> {
     private String action;
     private T message;
 
+    public ApiConstructor() {
+    }
+
     public ApiConstructor(String action, T message) {
         this.action = action;
         this.message = message;

@@ -1,18 +1,77 @@
 package org.webserver.gui;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.webserver.core.Client;
+import org.webserver.dto.ApiConstructor;
+import org.webserver.dto.request.WebServiceRequest;
+import org.webserver.dto.response.WebServiceResponse;
+
+import javax.swing.table.DefaultTableModel;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Objects;
 
 public class WebServiceGUI extends javax.swing.JFrame {
     private Client client;
     private String username;
+    private ObjectMapper mapper;
+
     /**
      * Creates new form WebServiceGUI
      */
     public WebServiceGUI(Client client, String username) {
         initComponents();
         this.setVisible(true);
+        this.setTitle("MyHosting");
         this.client = client;
         this.username = username;
+        this.mapper = new ObjectMapper();
+        lbUsername.setText(username.toUpperCase());
+
+
+        ApiConstructor<WebServiceRequest> apiConstructor = new ApiConstructor<>("get all webservices", new WebServiceRequest(username));
+
+        try {
+//            Chuyển đổi sang JSON
+            String jsonRequest = mapper.writeValueAsString(apiConstructor);
+            this.client.getOut().write(jsonRequest.getBytes(StandardCharsets.UTF_8));
+            this.client.getOut().flush();
+
+
+//            RESPONSE
+            byte[] buffer = new byte[1024];
+            int bytesRead = this.client.getIn().read(buffer);
+            String jsonResponse = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);
+            System.out.println(jsonResponse);
+
+//          Chuyển đổi JSON sang ApiConstructor<List<WebServiceResponse>>
+            JavaType type = mapper.getTypeFactory().constructParametricType(ApiConstructor.class,
+                    mapper.getTypeFactory().constructCollectionType(List.class, WebServiceResponse.class));
+
+            ApiConstructor<List<WebServiceResponse>> apiResponse = mapper.readValue(jsonResponse, type);
+
+// Truy xuất dữ liệu từ apiResponse
+            String action = apiResponse.getAction();
+            if (Objects.equals(action, "get all webservices")) {
+                List<WebServiceResponse> webServices = apiResponse.getMessage();
+                DefaultTableModel model = (DefaultTableModel) tbWebService.getModel();
+                model.setRowCount(0);
+                for (WebServiceResponse webService : webServices) {
+                    model.addRow(new Object[]{
+                            webService.getServiceName(),
+                            webService.getStatus(),
+                            webService.getIPHost(),
+                            webService.getPort(),
+                            webService.getSubDomain(),
+                            webService.getUsername(),
+                    });
+                }
+            }
+        } catch (IOException e) {
+            System.err.println(e);
+        }
     }
 
     /**
@@ -43,19 +102,19 @@ public class WebServiceGUI extends javax.swing.JFrame {
         btnNewWebService.setText("New webservice");
 
         tbWebService.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "Service Name", "Status", "IP Host", "Port", "Subdomain"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jScrollPane1.setViewportView(tbWebService);
@@ -119,7 +178,9 @@ public class WebServiceGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-
+    private void tbWebServiceMouseClicked(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+    }
 
 
     // Variables declaration - do not modify

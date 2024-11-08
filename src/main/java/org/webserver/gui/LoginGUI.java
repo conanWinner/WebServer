@@ -23,6 +23,7 @@ public class LoginGUI extends javax.swing.JFrame {
         initComponents();
         this.setVisible(true);
         this.client = client;
+        this.setTitle("MyHosting");
     }
 
 
@@ -139,7 +140,6 @@ public class LoginGUI extends javax.swing.JFrame {
 //            Chuyển đổi sang JSON
             ObjectMapper mapper = new ObjectMapper();
             String jsonRequest = mapper.writeValueAsString(apiConstructor);
-            System.out.println(jsonRequest);
             client.getOut().write(jsonRequest.getBytes(StandardCharsets.UTF_8));
             client.getOut().flush();
 
