@@ -50,6 +50,8 @@ $(document).ready(function () {
 
     const email = $("#signin_email").val();
     const password = $("#signin_password").val();
+    console.log(email);
+    console.log(password);
 
     $.ajax({
       type: "POST",
@@ -66,6 +68,7 @@ $(document).ready(function () {
         }
       },
       error: function (error) {
+        console.log("error là: " + error)
         const errorResponse = JSON.parse(error.responseText);
         alert("Error: " + errorResponse.message);
       },

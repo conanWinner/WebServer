@@ -60,7 +60,7 @@ public class HttpConnectionWorkerThread extends Thread{
                 }
             }
 
-            System.out.println("+=====+++++++++++++++  \n" + lineBuilder);
+//            System.out.println("+=====+++++++++++++++  \n" + lineBuilder);
 
             // parse data from lineBuilder
             InputStream data = new ByteArrayInputStream(
