@@ -43,7 +43,7 @@ public class ServerListenerThread extends Thread{
         KeyStore keyStore = KeyStore.getInstance("JKS");
 
 //        Tải KeyStore (chứa chứng chỉ SSL/TLS của mình)
-        try (InputStream keyStoreStream = new FileInputStream("keystore.jks")) {
+        try (InputStream keyStoreStream = getClass().getClassLoader().getResourceAsStream("keystore.jks")) {
             keyStore.load(keyStoreStream, "0905640692t".toCharArray());
         }
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");

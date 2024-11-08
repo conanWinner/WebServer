@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.webserver.httpserver.util.Json;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class ConfigurationManager {
 
@@ -26,22 +24,23 @@ public class ConfigurationManager {
 
     //used to load a config file by file path
     public void loadConfigurationFile(String filePath) {
-        FileReader fileReader = null;
-        try {
-            fileReader = new FileReader(filePath);
-        } catch (FileNotFoundException e) {
-            throw new HttpConfigurationException(e);
-        }
         StringBuffer sb = new StringBuffer();
-        int i;
-        try {
-            while( (i = fileReader.read()) != -1 ) {
-                sb.append((char)i);
+        try(InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath)){
+            if(inputStream != null){
+                try(BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))){
+                    String line;
+                    while((line = reader.readLine()) != null){
+                        sb.append(line);
+                    }
+                }
+            }else{
+                throw new HttpConfigurationException(new FileNotFoundException("File không tồn tại"));
             }
-        }catch (IOException e) {
-            throw new HttpConfigurationException(e);
-
+        }catch (IOException e){
+            e.printStackTrace();
         }
+
+
         JsonNode conf = null;
         try {
             conf = Json.parse(sb.toString());
