@@ -8,8 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WebServiceRepository {
-    private static Connection connect() throws Exception {
-        return DriverManager.getConnection(ConfigurationDB.DB_URL, ConfigurationDB.USER, ConfigurationDB.PASSWORD);
+    private static Connection connect()  {
+        try{
+            return DriverManager.getConnection(ConfigurationDB.DB_URL, ConfigurationDB.USER, ConfigurationDB.PASSWORD);
+        }catch ( Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
@@ -41,5 +46,44 @@ public class WebServiceRepository {
                 return webServiceResponses;
             }
         }
+    }
+
+    public static boolean createWebService(String serviceName, String port, String subDomain, String username){
+        try (Connection connection = connect()) {
+            String query = "INSERT INTO webservices (serviceName, status, IPHost, port, subDomain, username) VALUES (?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ps.setString(1, serviceName);
+            ps.setString(2, "Stopped");
+            ps.setString(3, "30.172.168.9");
+            ps.setString(4, port);
+            ps.setString(5, subDomain);
+            ps.setString(6, username);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean existBySimilarInformation(String serviceName, String subDomain, String port){
+        try (Connection connection = connect()) {
+            String query = "SELECT * FROM webservices WHERE serviceName = ? OR subDomain = ? OR port = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ps.setString(1, serviceName);
+            ps.setString(2, subDomain);
+            ps.setString(3, port);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if(rs.next()){
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
     }
 }

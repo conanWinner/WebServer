@@ -12,8 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository {
-    private static Connection connect() throws Exception {
-        return DriverManager.getConnection(ConfigurationDB.DB_URL, ConfigurationDB.USER, ConfigurationDB.PASSWORD);
+    private static Connection connect()  {
+        try{
+            return DriverManager.getConnection(ConfigurationDB.DB_URL, ConfigurationDB.USER, ConfigurationDB.PASSWORD);
+        }catch ( Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // Check login

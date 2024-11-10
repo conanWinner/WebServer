@@ -3,7 +3,9 @@ package org.webserver.core;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -27,9 +29,10 @@ public class WorkerThread extends Thread {
 
             while (true) {
                 //            Đọc dữ lieu
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[1024 * 3];
                 int bytesRead = is.read(buffer);
                 String jsonRequest = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);
+
                 System.out.println("json: " + jsonRequest);
 
 //           JSON => Api
@@ -39,7 +42,7 @@ public class WorkerThread extends Thread {
 
                 HandleMessage handleMessage = null;
                 if (messageNode != null) {
-                    handleMessage = new HandleMessage(messageNode, os);
+                    handleMessage = new HandleMessage(messageNode, os, is);
                 } else {
                     System.out.println("message null");
                 }
@@ -52,7 +55,7 @@ public class WorkerThread extends Thread {
                         if (handleMessage != null) handleMessage.handleGetAllWebServices();
                         break;
                     case "create webservice":
-                        if (handleMessage != null) handleMessage.handleLogin();
+                        if (handleMessage != null) handleMessage.handleCreateWebService();
                         break;
                     case "update webservice":
                         if (handleMessage != null) handleMessage.handleLogin();
@@ -61,7 +64,7 @@ public class WorkerThread extends Thread {
             }
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
     }
