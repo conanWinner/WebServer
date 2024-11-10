@@ -9,11 +9,21 @@ import org.webserver.dto.ApiConstructor;
 import org.webserver.dto.request.LoginRequest;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.Objects;
 
-public class LoginGUI extends javax.swing.JFrame {
+public class LoginGUI extends JFrame {
     private Client client;
 
     /**
@@ -37,138 +47,145 @@ public class LoginGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        txtUsername = new javax.swing.JTextField();
-        txtPassword = new javax.swing.JPasswordField();
-        btnLogin = new javax.swing.JButton();
+        jLabel1 = new JLabel();
+        jLabel2 = new JLabel();
+        jLabel3 = new JLabel();
+        txtUsername = new JTextField();
+        txtPassword = new JPasswordField();
+        btnLogin = new JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent evt) {
                 formWindowClosed(evt);
             }
-            public void windowClosing(java.awt.event.WindowEvent evt) {
+            public void windowClosing(WindowEvent evt) {
                 formWindowClosing(evt);
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 255));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setFont(new Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new Color(0, 0, 255));
+        jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel1.setText("Welcome to MyHosting");
 
         jLabel2.setText("Username:");
 
         jLabel3.setText("Password:");
 
-        txtUsername.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        txtUsername.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 txtUsernameActionPerformed(evt);
             }
         });
 
-        txtPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        txtPassword.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 txtPasswordActionPerformed(evt);
             }
         });
 
         btnLogin.setText("Login");
-        btnLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 btnLoginActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(25, 25, 25)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, 342, GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                                         .addComponent(jLabel2)
                                                         .addComponent(jLabel3))
                                                 .addGap(35, 35, 35)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                                         .addComponent(txtUsername)
-                                                        .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE))))
+                                                        .addComponent(txtPassword, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE))))
                                 .addContainerGap(31, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
                                 .addGap(34, 34, 34)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
                                 .addGap(38, 38, 38)
-                                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(54, Short.MAX_VALUE))
         );
 
         pack();
     }/// </editor-fold>
 
-    private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {
+    private void txtUsernameActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {
+    private void txtPasswordActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnLoginActionPerformed(ActionEvent evt) {
         String username = txtUsername.getText();
         String password = txtPassword.getText();
 
-        ApiConstructor<LoginRequest> apiConstructor = new ApiConstructor<>("login", new LoginRequest(username, password));
+        if(!Objects.equals(username, "") && !Objects.equals(password, "")){
+            ApiConstructor<LoginRequest> apiConstructor = new ApiConstructor<>("login", new LoginRequest(username, password));
 
-        try {
+            try {
 //            Chuyển đổi sang JSON
-            ObjectMapper mapper = new ObjectMapper();
-            String jsonRequest = mapper.writeValueAsString(apiConstructor);
-            client.getOut().write(jsonRequest.getBytes(StandardCharsets.UTF_8));
-            client.getOut().flush();
+                ObjectMapper mapper = new ObjectMapper();
+                String jsonRequest = mapper.writeValueAsString(apiConstructor);
+                client.getOut().write(jsonRequest.getBytes(StandardCharsets.UTF_8));
+                client.getOut().flush();
 
 //            RESPONSE
-            byte[] buffer = new byte[1024];
-            int bytesRead = client.getIn().read(buffer);
-            String jsonResponse = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);
+                byte[] buffer = new byte[1024];
+                int bytesRead = client.getIn().read(buffer);
+                String jsonResponse = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);
 //            JSON => Text
-            JsonNode rootNode = mapper.readTree(jsonResponse);
-            String message = rootNode.get("message").asText();
-            if(Objects.equals(message, "Success")){
-                WebServiceGUI newFrame = new WebServiceGUI(client, username);
-                newFrame.setVisible(true);
-                this.dispose();
-            }else{
-                javax.swing.JOptionPane.showMessageDialog(null, "Login failed!", "Login error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                txtUsername.setText("");
-                txtPassword.setText("");
+                JsonNode rootNode = mapper.readTree(jsonResponse);
+                String message = rootNode.get("message").asText();
+                if(Objects.equals(message, "Success")){
+                    WebServiceGUI newFrame = new WebServiceGUI(client, username);
+                    newFrame.setVisible(true);
+                    this.dispose();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Login failed!", "Login error", JOptionPane.ERROR_MESSAGE);
+                    txtUsername.setText("");
+                    txtPassword.setText("");
+                }
+            } catch (IOException e){
+                e.printStackTrace();
             }
-        } catch (IOException e){
-            System.err.println(e);
+        }else{
+            JOptionPane.showMessageDialog(null, "Login failed!", "Login error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {
+
+
+
+    private void formWindowClosed(WindowEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {
+    private void formWindowClosing(WindowEvent evt) {
         // TODO add your handling code here:
     }
 
@@ -176,11 +193,11 @@ public class LoginGUI extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify
-    private javax.swing.JButton btnLogin;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JPasswordField txtPassword;
-    private javax.swing.JTextField txtUsername;
+    private JButton btnLogin;
+    private JLabel jLabel1;
+    private JLabel jLabel2;
+    private JLabel jLabel3;
+    private JPasswordField txtPassword;
+    private JTextField txtUsername;
     // End of variables declaration
 }

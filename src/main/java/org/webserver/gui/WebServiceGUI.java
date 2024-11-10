@@ -98,8 +98,18 @@ public class WebServiceGUI extends javax.swing.JFrame {
         });
 
         btnLogout.setText("Logout");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         btnNewWebService.setText("New webservice");
+        btnNewWebService.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewWebServiceActionPerformed(evt);
+            }
+        });
 
         tbWebService.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{
@@ -163,7 +173,9 @@ public class WebServiceGUI extends javax.swing.JFrame {
     }
 
     private void btnNewWebServiceActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        CreateWebServiceGUI newWebServiceGUI = new CreateWebServiceGUI(this, client, username);
+        newWebServiceGUI.setVisible(true);
+        this.setEnabled(false);
     }
 
     private void btnActiveActionPerformed(java.awt.event.ActionEvent evt) {
