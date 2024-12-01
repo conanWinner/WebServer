@@ -1,5 +1,20 @@
 {
-  "localhost": "localhost",
-  "port": 8090,
-  "webroot": "/webserver"
+  "server": {
+    "listen": 8080,
+    "serverName": "localhost",
+    "webroot": "WebRoot",
+    "locations": [
+      {
+        "path": "/",
+        "root": "WebRoot",
+        "index": "index.html"
+      },
+      {
+        "path": "/api",
+        "proxyPass": "http://localhost:3000"
+      }
+    ],
+    "errorLog": "/var/log/server/error.log",
+    "accessLog": "/var/log/server/access.log"
+  }
 }

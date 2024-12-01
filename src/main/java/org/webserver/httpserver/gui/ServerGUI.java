@@ -69,17 +69,6 @@ public class ServerGUI {
         startButton.addActionListener(e -> startServer());
         stopButton.addActionListener(e -> stopServer());
 
-//        stopButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                logArea.append("Stopping server...\n");
-//                serverListener.interrupt();  // Dừng luồng
-//                ServerListenerThread.isRunning = false;
-//                startButton.setEnabled(true);
-//                stopButton.setEnabled(false);
-//            }
-//        });
-
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -124,7 +113,7 @@ public class ServerGUI {
                 startButton.setEnabled(false);
                 stopButton.setEnabled(true);
 
-                serverListener = new ServerListenerThread(conf.getPort(), conf.getWebroot(), conf.getLocalhost());
+                serverListener = new ServerListenerThread(conf.getServer().getListen(), conf.getServer().getWebroot(), conf.getServer().getServerName());
                 serverListener.setConnectionCountCallback(this::GUIupdateConnectionCount);
                 serverListener.setConnectionListCallback(this::GUIaddActiveUser);
                 serverListener.start();

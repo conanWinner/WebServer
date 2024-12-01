@@ -4,63 +4,90 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.webserver.httpserver.util.Json;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class ConfigurationManager {
 
-    private static ConfigurationManager myConfigurationManager;
-    private static Configuration myCurrentConfiguration;
+    private static ConfigurationManager instance;
+    private Configuration currentConfiguration;
 
     private ConfigurationManager() {
-
     }
 
+    // Singleton instance
     public static ConfigurationManager getInstance() {
-        if (myConfigurationManager == null) {
-            myConfigurationManager = new ConfigurationManager();
+        if (instance == null) {
+            instance = new ConfigurationManager();
         }
-        return myConfigurationManager;
+        return instance;
     }
 
-    //used to load a config file by file path
+    /**
+     * Load configuration from a file
+     * @param filePath the path to the configuration file
+     */
     public void loadConfigurationFile(String filePath) {
-        FileReader fileReader = null;
         try {
-            fileReader = new FileReader(filePath);
-        } catch (FileNotFoundException e) {
-            throw new HttpConfigurationException(e);
-        }
-        StringBuffer sb = new StringBuffer();
-        int i;
-        try {
-            while( (i = fileReader.read()) != -1 ) {
-                sb.append((char)i);
-            }
-        }catch (IOException e) {
-            throw new HttpConfigurationException(e);
+            // Read file content
+            String content = Files.readString(Paths.get(filePath));
+            // Parse JSON content
+            JsonNode jsonNode = Json.parse(content);
+            // Map JSON to Configuration object
+            currentConfiguration = Json.fromJson(jsonNode, Configuration.class);
 
-        }
-        JsonNode conf = null;
-        try {
-            conf = Json.parse(sb.toString());
+            // Validate configuration
+            validateConfiguration(currentConfiguration);
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ConfigurationException("Error reading configuration file: " + filePath, e);
         }
-        try {
-            myCurrentConfiguration = Json.fromJson(conf, Configuration.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+//        catch (JsonProcessingException e) {
+//            throw new ConfigurationException("Error parsing configuration JSON: " + filePath, e);
+//        }
     }
 
-    //Returns the current loaded config
+    /**
+     * Get the current loaded configuration
+     * @return current configuration object
+     */
     public Configuration getCurrentConfiguration() {
-        if (myCurrentConfiguration == null) {
-            throw new HttpConfigurationException("No configuration set");
+        if (currentConfiguration == null) {
+            throw new ConfigurationException("Configuration not loaded yet!");
         }
-        return myCurrentConfiguration;
+        return currentConfiguration;
     }
 
+    /**
+     * Reload configuration file
+     * @param filePath the path to the configuration file
+     */
+    public void reloadConfigurationFile(String filePath) {
+        loadConfigurationFile(filePath);
+    }
+
+    /**
+     * Validate the loaded configuration to ensure all necessary fields are present
+     * @param configuration the configuration object to validate
+     */
+    private void validateConfiguration(Configuration configuration) {
+        if (configuration.getServer() == null) {
+            throw new ConfigurationException("Server configuration is missing in the configuration file.");
+        }
+        if (configuration.getServer().getLocations() == null || configuration.getServer().getLocations().isEmpty()) {
+            throw new ConfigurationException("At least one location must be specified in the configuration file.");
+        }
+    }
+
+    // Custom exception class for configuration errors
+    public static class ConfigurationException extends RuntimeException {
+        public ConfigurationException(String message) {
+            super(message);
+        }
+
+        public ConfigurationException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
 }

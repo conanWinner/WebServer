@@ -1,6 +1,5 @@
 package org.webserver.util;
 
-import org.webserver.common.Constants;
 import org.webserver.httpserver.core.io.WebRootHandler;
 import org.webserver.httpserver.core.io.WebRootNotFoundException;
 

@@ -78,15 +78,21 @@ public class HttpConnectionWorkerThread extends Thread{
             //TODO
             HandlerRequest handlerRequest = new HandlerRequest();
 
+            HttpMethod method = request.getMethod();
+
+            if (method == null) {
+                throw new RuntimeException("HTTP Method is null in the request");
+            }
+
             System.out.println(request.getRequestTarget());
 
-            if (request.getMethod().equals(HttpMethod.GET)) {
+            if (method.equals(HttpMethod.GET)) {
                 handlerRequest.handleGetRequest(request, os);
-            } else if (request.getMethod().equals(HttpMethod.POST)) {
+            } else if (method.equals(HttpMethod.POST)) {
                 handlerRequest.handlePostRequest(request, os, is);
-            }else if(request.getMethod().equals(HttpMethod.PUT)){
+            }else if(method.equals(HttpMethod.PUT)){
                 handlerRequest.handlePutRequest(request, os, is);
-            }else if(request.getMethod().equals(HttpMethod.DELETE)){
+            }else if(method.equals(HttpMethod.DELETE)){
                 handlerRequest.handleDeleteRequest(request, os, is);
             }
             else if (request.getMethod().equals(HttpMethod.OPTIONS)) {

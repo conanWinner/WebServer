@@ -13,17 +13,20 @@ public class HttpServer {
         System.out.println("Server running ...");
         ConfigurationManager.getInstance().loadConfigurationFile("src/main/resources/http.json");
 
-        Configuration conf = ConfigurationManager.getInstance().getCurrentConfiguration();
+        Configuration config = ConfigurationManager.getInstance().getCurrentConfiguration();
 
-        //            ServerListenerThread serverListener = new ServerListenerThread(conf.getPort(), conf.getWebroot(), conf.getLocalhost());
-//            serverListener.start();
-//            ServerGUI serverGUI = new ServerGUI(serverListener);
-        ServerGUI serverGUI = new ServerGUI(conf);
+        // Access server details
+        System.out.println("Server Listening on: " + config.getServer().getListen());
+        System.out.println("Server Name: " + config.getServer().getServerName());
 
-        //update count client
-//            serverListener.setConnectionCountCallback(serverGUI::GUIupdateConnectionCount);
-//            serverListener.setConnectionListCallback(serverGUI::GUIaddActiveUser);
+        // Access locations
+        for (Configuration.Location location : config.getServer().getLocations()) {
+            System.out.println("Path: " + location.getPath());
+            System.out.println("Root: " + location.getRoot());
+            System.out.println("Index: " + location.getIndex());
+        }
 
+        ServerGUI serverGUI = new ServerGUI(config);
 
     }
 

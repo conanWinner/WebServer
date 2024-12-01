@@ -2,16 +2,16 @@ package org.webserver.httpserver.core;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.webserver.common.Constants;
 import org.webserver.http.HttpRequest;
 import org.webserver.http.HttpStatusCode;
+import org.webserver.httpserver.config.Configuration;
+import org.webserver.httpserver.config.ConfigurationManager;
 import org.webserver.httpserver.entity.User;
 import org.webserver.httpserver.entity.UserUpdate;
 import org.webserver.httpserver.exception.ErrorCode;
 import org.webserver.httpserver.repository.UserRepository;
 import org.webserver.httpserver.util.Json;
 import org.webserver.util.FileUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,43 +23,33 @@ import java.util.Map;
 
 public class HandlerRequest {
 
-    //    private static final UserRepository userRepository = new UserRepository();
     private static final ObjectMapper mapper = new ObjectMapper();
+    private static final Configuration config = ConfigurationManager.getInstance().getCurrentConfiguration();
 
     public void handleGetRequest(HttpRequest request, OutputStream outputStream) throws IOException {
 
         String fileName = request.getRequestTarget();
 
-        if (fileName == null || fileName.equals("/")) {
-            fileName = "/index.html";
+        String path = "";
+        String root = "";
+        String index = "";
+
+        for (Configuration.Location location : config.getServer().getLocations()) {
+
+            if (location.getRoot() != null) {
+                path = location.getPath();
+                root = location.getRoot();
+                index = location.getIndex();
+            }
+
         }
 
-
-        // ========== format iduser ==========
-        String[] array = fileName.toString().split("/");
-        int iduser = 0;
-        try {
-            Integer.parseInt(array[array.length - 1]);
-        } catch (NumberFormatException e) {
+        if (fileName == null || fileName.equals(path)) {
+            fileName = "/" + index;
         }
 
-//        fileName = new StringBuilder("/");
-//        if (iduser > 0) {
-//            for (int i = 1; i < array.length - 1; i++){
-//                fileName.append(array[i]).append("/");
-//            }
-//        }
-
-        System.out.println(iduser);
-        for (int i = 0; i < array.length; i++)
-            System.out.println(i + " " + array[i]);
-
-        System.out.println("======================================");
-//        ==========================================
-
-
-        if (FileUtils.exist(Constants.FILES_DIR)) {
-            fileName = Constants.FILES_DIR + fileName;
+        if (FileUtils.exist(root)) {
+            fileName = root + fileName;
         } else {
             outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n<h1>File not found!</h1>".getBytes(StandardCharsets.UTF_8));
             return;
@@ -81,7 +71,7 @@ public class HandlerRequest {
         outputStream.write(responseMetadata.toString().getBytes(StandardCharsets.UTF_8));
 
 
-        // =============== reponse to GUI client with body content ===========
+        // =============== response to GUI client with body content ===========
         try (fileStream) {
             fileStream.transferTo(outputStream);
         }
@@ -222,7 +212,7 @@ public class HandlerRequest {
             errorBody = ErrorCode.EMAIL_NOT_FOUND;
             sendNotFound(clientOs, errorBody);
             return;
-        }else if (UserRepository.loginUser(emailUser, user.getPassword()) == null) {
+        }   else if (UserRepository.loginUser(emailUser, user.getPassword()) == null) {
             errorBody = ErrorCode.WRONG_PASSWORD;
             sendUnauthorized(clientOs, errorBody);
             return;
