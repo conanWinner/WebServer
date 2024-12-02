@@ -1,8 +1,4 @@
-package org.webserver.dto.reponse;
-
-import org.webserver.entity.WebService;
-
-import java.util.List;
+package org.webserver.dto.response;
 
 public class WebServiceResponse {
     private String serviceName;

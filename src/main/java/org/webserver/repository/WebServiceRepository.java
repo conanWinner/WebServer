@@ -1,7 +1,6 @@
 package org.webserver.repository;
 
-import org.webserver.dto.reponse.WebServiceResponse;
-import org.webserver.entity.WebService;
+import org.webserver.dto.response.WebServiceResponse;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ public class WebServiceRepository {
     }
 
 
-    // Hàm lấy danh sách tài khoản từ MySQL
     public static List<WebServiceResponse> getAllWebServices(String username) throws Exception {
         try (Connection connection = connect()) {
             String query = "SELECT * FROM webservices WHERE username = ?";
@@ -61,6 +59,23 @@ public class WebServiceRepository {
             ps.setString(6, username);
 
             int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean activeWebService(String subDomain){
+        try (Connection connection = connect()) {
+            String query = "UPDATE webservices SET status = ? WHERE subDomain = ?";
+
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ps.setString(1, "Running");
+            ps.setString(2, subDomain);
+
+            int rowsAffected = ps.executeUpdate();
+
             return rowsAffected > 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);

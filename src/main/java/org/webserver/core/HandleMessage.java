@@ -2,10 +2,11 @@ package org.webserver.core;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.tools.javac.Main;
 import org.webserver.dto.ApiConstructor;
-import org.webserver.dto.reponse.WebServiceResponse;
+import org.webserver.dto.request.ActiveRequest;
+import org.webserver.dto.response.WebServiceResponse;
 import org.webserver.dto.request.CreateWebServiceRequest;
-import org.webserver.dto.request.FileContentRequest;
 import org.webserver.dto.request.LoginRequest;
 import org.webserver.dto.request.WebServiceRequest;
 import org.webserver.entity.User;
@@ -14,6 +15,7 @@ import org.webserver.repository.WebServiceRepository;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 
 public class HandleMessage {
@@ -94,7 +96,7 @@ public class HandleMessage {
                 }
 
                 // Tạo đối tượng File cho tệp đích
-                File file1 = new File(directory, serviceName + ".jar");
+                File file1 = new File(directory, subDomain + ".jar");
 
                 // Ghi dữ liệu vào tệp
                 try (FileOutputStream fos = new FileOutputStream(file1)) {
@@ -124,6 +126,62 @@ public class HandleMessage {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void handleActive() {
+        try {
+            ActiveRequest activeRequest = mapper.treeToValue(messageNode, ActiveRequest.class);
+
+            String subDomain = activeRequest.getSubDomain();
+
+
+            boolean checkCallFile = callFileJarOfWebService(subDomain);
+            ApiConstructor<String> api;
+            String jsonResponse = "";
+            if (checkCallFile) {
+                WebServiceRepository.activeWebService(subDomain);
+                api = new ApiConstructor<>("active webservice", "Success");
+                jsonResponse = mapper.writeValueAsString(api);
+            } else {
+                api = new ApiConstructor<>("active webservice", "Failed");
+                jsonResponse = mapper.writeValueAsString(api);
+            }
+            clientOs.write(jsonResponse.getBytes(StandardCharsets.UTF_8));
+            clientOs.flush();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean callFileJarOfWebService(String subDomain) throws IOException, InterruptedException {
+        // Đọc file JAR từ resources
+        InputStream jarStream = Main.class.getClassLoader().getResourceAsStream("jar/" + subDomain + ".jar");
+        if (jarStream == null) {
+            System.out.println("File JAR không tồn tại trong resources.");
+            return false;
+        }
+
+        // Tạo file tạm thời để lưu JAR
+        File tempJarFile = File.createTempFile(subDomain, ".jar");
+        tempJarFile.deleteOnExit(); // Xóa file sau khi ứng dụng kết thúc
+
+        // Ghi nội dung của file JAR từ resources ra file tạm thời
+        // Sử dụng Files.copy để sao chép file JAR từ InputStream vào file tạm
+        Files.copy(jarStream, tempJarFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+        // Tạo ProcessBuilder để chạy file JAR từ file tạm thời
+        ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", tempJarFile.getAbsolutePath());
+        processBuilder.inheritIO(); // Để hiển thị output của quá trình chạy JAR lên console
+
+        // Bắt đầu quá trình chạy file JAR
+        Process process = processBuilder.start();
+        System.out.println("Đang chạy server cho user1 từ file JAR trong resources.");
+
+        // Xử lý khi process kết thúc
+        process.waitFor();
+        return true;
     }
 
 //    public void receiveFileInChunks(int totalParts, InputStream clientIn, String outputFilePath) throws IOException {

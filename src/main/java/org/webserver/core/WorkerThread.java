@@ -58,8 +58,10 @@ public class WorkerThread extends Thread {
                         if (handleMessage != null) handleMessage.handleCreateWebService();
                         break;
                     case "update webservice":
-                        if (handleMessage != null) handleMessage.handleLogin();
+//                        if (handleMessage != null) handleMessage.handleLogin();
                         break;
+                    case "active webservice":
+                        if (handleMessage != null) handleMessage.handleActive();
                 }
             }
 
