@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Configuration {
     private ServerConfig server;
+    private LoadBalancerConfig loadBalancer;
 
     public ServerConfig getServer() {
         return server;
@@ -11,6 +12,14 @@ public class Configuration {
 
     public void setServer(ServerConfig server) {
         this.server = server;
+    }
+
+    public LoadBalancerConfig getLoadBalancer() {
+        return loadBalancer;
+    }
+
+    public void setLoadBalancer(LoadBalancerConfig loadBalancer) {
+        this.loadBalancer = loadBalancer;
     }
 
     public static class ServerConfig {
@@ -79,6 +88,28 @@ public class Configuration {
 
         public void setIndex(String index) {
             this.index = index;
+        }
+    }
+
+    // Cấu hình Load Balancer
+    public static class LoadBalancerConfig {
+        private String strategy; // Chiến lược phân phối: RoundRobin, LeastConnections, v.v.
+        private List<String> backendServers; // Danh sách các backend servers
+
+        public String getStrategy() {
+            return strategy;
+        }
+
+        public void setStrategy(String strategy) {
+            this.strategy = strategy;
+        }
+
+        public List<String> getBackendServers() {
+            return backendServers;
+        }
+
+        public void setBackendServers(List<String> backendServers) {
+            this.backendServers = backendServers;
         }
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class User {
 
-//    private int iduser;
+    private int iduser;
     private String fullName;
     private String password;
     private String email;
@@ -12,9 +12,9 @@ public class User {
     private String phoneNumber;
 
 
-//    public int getIduser() {
-//        return iduser;
-//    }
+    public String getIduser() {
+        return String.valueOf(iduser);
+    }
 
     public String getFullName() {
         return fullName;
@@ -61,7 +61,7 @@ public class User {
     public User() {
     }
 
-    public User(String fullname, String password, String email, String phonenumber, String address) {
+    public User(String iduser, String fullname, String password, String email, String phonenumber, String address) {
         this.fullName = fullname;
         this.password = password;
         this.email = email;
@@ -76,7 +76,13 @@ public class User {
         this.address = address;
     }
 
-
+    public User(String iduser, String fullname, String email, String phonenumber, String address) {
+        this.iduser = Integer.parseInt(iduser);
+        this.fullName = fullname;
+        this.email = email;
+        this.phoneNumber = phonenumber;
+        this.address = address;
+    }
 
     // Phương thức chuyển đổi sang JSON
     public String toJson() {

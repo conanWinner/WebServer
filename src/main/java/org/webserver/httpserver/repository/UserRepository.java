@@ -5,6 +5,8 @@ import org.webserver.httpserver.entity.UserUpdate;
 import org.webserver.httpserver.exception.ErrorCode;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserRepository {
 
@@ -42,14 +44,14 @@ public class UserRepository {
         }
     }
 
-    public static boolean existByEmail(String email){
+    public static boolean existByIduser(String iduser){
         try (Connection conn = connect()) {
-            String checkEmailQuery = "SELECT COUNT(*) FROM user WHERE email = ?";
-            try (PreparedStatement checkStmt = conn.prepareStatement(checkEmailQuery)) {
-                checkStmt.setString(1, email);
+            String _id = "SELECT COUNT(*) FROM user WHERE iduser = ?";
+            try (PreparedStatement checkStmt = conn.prepareStatement(_id)) {
+                checkStmt.setString(1, iduser);
                 try (ResultSet rs = checkStmt.executeQuery()) {
                     if (rs.next() && rs.getInt(1) > 0) {
-                        return true; // True nếu email đã tồn tại
+                        return true; // True nếu id đã tồn tại
                     }
                 }
             }
@@ -109,27 +111,27 @@ public class UserRepository {
         return null;
     }
 
-    public static boolean updateUser(UserUpdate userUpdate, String email){
+    public static boolean updateUser(UserUpdate userUpdate, String iduser){
         String fullName = userUpdate.getFullName();
-        String newPassword = userUpdate.getNewPassword();
+        String email = userUpdate.getEmail();
         String address = userUpdate.getAddress();
         String phoneNumber = userUpdate.getPhoneNumber();
 
         try (Connection conn = connect()) {
 
 
-            String query = "UPDATE user SET  fullName=?, password=?, phoneNumber=?, address=? WHERE email=?";
+            String query = "UPDATE user SET  fullName=?, email=?, phoneNumber=?, address=? WHERE iduser=?";
             PreparedStatement pstmt = conn.prepareStatement(query);
 
             pstmt.setString(1, fullName);
-            pstmt.setString(2, newPassword);
+            pstmt.setString(2, email);
             pstmt.setString(3, phoneNumber);
             pstmt.setString(4, address);
-            pstmt.setString(5, email);
+            pstmt.setString(5, iduser);
 
             return pstmt.executeUpdate() > 0;
         }catch (SQLIntegrityConstraintViolationException e){
-            System.out.println("loi update");
+            System.out.println("Error update");
             return false;
         }
         catch (Exception e) {
@@ -138,15 +140,15 @@ public class UserRepository {
         }
     }
 
-    public static boolean deleteUser(String email){
+    public static boolean deleteUser(int iduser){
         try (Connection conn = connect()) {
-            String sql = "DELETE FROM user WHERE email=?";
+            String sql = "DELETE FROM user WHERE iduser=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, email);
+            pstmt.setInt(1, iduser);
 
             return pstmt.executeUpdate() > 0;
         }catch (SQLIntegrityConstraintViolationException e){
-            System.out.println("loi delete");
+            System.out.println("Error delete");
             return false;
         }
         catch (Exception e) {
@@ -156,32 +158,34 @@ public class UserRepository {
     }
 
     // Hàm lấy danh sách tài khoản từ MySQL
-//    public static List<User> loadUsers() {
-//
-//        try (Connection conn = connect()) {
-//
-//            List<User> users = new ArrayList<>();
-//
-//            String query = "SELECT email,ip,jointime FROM user";
-//            PreparedStatement pstmt = conn.prepareStatement(query);
-//            ResultSet rs = pstmt.executeQuery();
-//
-//            while (rs.next()) {
-//                String email = rs.getString("email");
-//                String ip = rs.getString("ip");
-//                String jointime = rs.getString("jointime");
-//
-//                users.add(new User(email, jointime, ip));
-//
-//            }
-//
-//            return users;
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    public static List<User> getAllUsers() {
+
+        try (Connection conn = connect()) {
+
+            List<User> users = new ArrayList<>();
+
+            String query = "SELECT iduser,fullname,email,phonenumber,address FROM user";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String iduser = rs.getString("iduser");
+                String fullname = rs.getString("fullname");
+                String email = rs.getString("email");
+                String address = rs.getString("address");
+                String phonenumber = rs.getString("phonenumber");
+
+                users.add(new User(iduser,fullname,email,phonenumber,address));
+
+            }
+
+            return users;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     //    ======================= Saving email ======================
 //    public static void saveEmailMessage(String email, String title, String content, String emailreceivedfrom) {

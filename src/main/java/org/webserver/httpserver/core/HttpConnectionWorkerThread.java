@@ -84,7 +84,7 @@ public class HttpConnectionWorkerThread extends Thread{
                 throw new RuntimeException("HTTP Method is null in the request");
             }
 
-            System.out.println(request.getRequestTarget());
+            System.out.println("Target ================> : " + request.getRequestTarget());
 
             if (method.equals(HttpMethod.GET)) {
                 handlerRequest.handleGetRequest(request, os);

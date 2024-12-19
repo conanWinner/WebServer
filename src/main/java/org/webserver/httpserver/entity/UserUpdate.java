@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class UserUpdate {
     private String fullName;
-    private String oldPassword;
-    private String newPassword;
+    private String email;
     private String address;
     private String phoneNumber;
 
@@ -13,10 +12,9 @@ public class UserUpdate {
     public UserUpdate() {
     }
 
-    public UserUpdate(String fullName, String oldPassword, String newPassword, String address, String phoneNumber) {
+    public UserUpdate(String fullName, String email, String address, String phoneNumber) {
         this.fullName = fullName;
-        this.oldPassword = oldPassword;
-        this.newPassword = newPassword;
+        this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
     }
@@ -29,20 +27,12 @@ public class UserUpdate {
         this.fullName = fullName;
     }
 
-    public String getOldPassword() {
-        return oldPassword;
+    public String getEmail() {
+        return email;
     }
 
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getAddress() {

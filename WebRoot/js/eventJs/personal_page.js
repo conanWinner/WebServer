@@ -1,111 +1,215 @@
-import { URLIndex, change_info_url, delete_user_url } from "./common.js";
-import {logout} from "./checkLogin.js";
+import {
+  URLIndex,
+  change_info_url,
+  delete_user_url,
+  getAllUsers,
+} from "./common.js";
 
-$(document).ready(function () {
-  $("#form_change_info").submit(function (e) {
-    e.preventDefault();
+$(document).ready(async function () {
+  // State management
+  let users = new Map();
 
-    const urlForChanging = change_info_url($("#email").val());
-    const urlForDeleting = delete_user_url($("#email").val());
-    // Xác định nút nào được nhấn
-    var action = $(this).find('input[type="submit"]:focus').val();
+  // API functions
+  async function fetchUsers() {
+    try {
+      const response = await fetch(getAllUsers);
+      if (!response.ok) throw new Error("Failed to fetch users");
+      const data = await response.json();
+      setUsers(data);
+      renderUsers();
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      showError("Could not fetch users. Please try again later.");
+    }
+  }
 
-    const fullName = $("#fullName").val();
-    const phoneNumber = $("#phoneNumber").val();
-    const address = $("#address").val();
-    const oldPassword = $("#password").val();
-    const newPassword = $("#new-password").val();
-    const newPasswordRetype = $("#new-password-retype").val();
+  function setUsers(data) {
+    data.forEach((user) => users.set(user.iduser, user));
+    console.log(users);
+  }
 
-    if (action === "Send") {
-    
-      if (
-        oldPassword === "" ||
-        newPassword === "" ||
-        newPasswordRetype === ""
-      ) {
-        alert("Có trường đang để trống!");
-        return;
+  async function updateUser(iduser, updatedData) {
+    try {
+      const response = await fetch(`${change_info_url}/${iduser}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData),
+      });
+      if (!response.ok) throw new Error("Failed to update user");
+      const result = await response.json();
+
+      if (result.message === "Success") {
+        users.set(iduser, { ...users.get(iduser), ...updatedData });
+        updateRowById(iduser, updatedData);
+        alert("User updated successfully!");
+      } else {
+        throw new Error(result.message);
       }
+    } catch (error) {
+      console.error("Error updating user:", error);
+      showError("Could not update user. Please try again later.");
+    }
+  }
 
-      const dataToSend = {
-        fullName: fullName,
-        oldPassword: oldPassword,
-        newPassword: newPassword,
-        address: address,
-        phoneNumber: phoneNumber,
-      };
+  async function deleteUser(iduser) {
+    try {
+      const response = await fetch(`${delete_user_url}/${iduser}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete user");
 
-      const dataToSaveInSessionStorage = {
-        fullName: fullName,
-        email: $("#email").val(),
-        phoneNumber: phoneNumber,
-        address: address,
-      };
+      users.delete(iduser);
+      deleteRowById(iduser);
+      alert("User deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      showError("Could not delete user. Please try again later.");
+    }
+  }
 
-      const jsonString = JSON.stringify(dataToSend, null, 2);
-      const jsonStringToSaveInSessionStorage = JSON.stringify(
-        dataToSaveInSessionStorage,
-        null,
-        2
+  // UI rendering functions
+  function renderUsers() {
+    const tbody = $("#userTableBody");
+    tbody.empty();
+    users.forEach((user) => {
+      tbody.append(createUserRow(user));
+    });
+  }
+
+  function createUserRow(user) {
+    return `
+      <tr data-iduser="${user.iduser}">
+        <td class="td-id">${user.iduser}</td>
+        <td class="td-fullname">${user.fullname}</td>
+        <td class="td-email">${user.email}</td>
+        <td class="td-phonenumber">${user.phonenumber}</td>
+        <td class="td-address">${user.address}</td>
+        <td>
+          <button class="btn btn-sm btn-info btn-edit" data-iduser="${user.iduser}">Edit</button>
+          <button class="btn btn-sm btn-danger btn-delete" data-iduser="${user.iduser}">Delete</button>
+        </td>
+      </tr>
+    `;
+  }
+
+  function updateRowById(iduser, updatedData) {
+    const $row = $(`#userTableBody tr[data-iduser="${iduser}"]`);
+    $row.find(".td-fullname").text(updatedData.fullname);
+    $row.find(".td-phonenumber").text(updatedData.phonenumber);
+    $row.find(".td-address").text(updatedData.address);
+  }
+
+  function deleteRowById(iduser) {
+    $(`#userTableBody tr[data-iduser="${iduser}"]`).remove();
+  }
+
+  function showError(message) {
+    const errorContainer = $("#errorMessage");
+    errorContainer.text(message).show();
+  }
+
+  // Event handlers
+  $(document).on("click", ".btn-edit", function () {
+    const $row = $(this).closest("tr");
+    const iduser = $row.data("iduser");
+
+    const user = users.get(iduser + "");
+
+    console.log(user);
+
+    // Convert cells to inputs
+    $row
+      .find(".td-fullname")
+      .html(
+        `<input type="text" class="form-control form-control-sm" name="fullname" value="${user.fullname}">`
+      );
+    $row
+      .find(".td-email")
+      .html(
+        `<input type="text" class="form-control form-control-sm" name="email" value="${user.email}">`
+      );
+    $row
+      .find(".td-phonenumber")
+      .html(
+        `<input type="text" class="form-control form-control-sm" name="phonenumber" value="${user.phonenumber}">`
+      );
+    $row
+      .find(".td-address")
+      .html(
+        `<input type="text" class="form-control form-control-sm" name="address" value="${user.address}">`
       );
 
-      if (newPassword != newPasswordRetype) {
-        alert("Mật khẩu mới không trùng khớp");
-      } else {
-        console.log(jsonString);
-        $.ajax({
-          type: "PUT",
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
-          url: urlForChanging,
-          data: jsonString,
-          success: function (response) {
-            const message = response.message;
-            if (message == "Success") {
-              alert("Thay đổi thông tin thành công!");
-              sessionStorage.setItem("User", jsonStringToSaveInSessionStorage);
-              window.location.href = URLIndex;
-            }
-          },
-          error: function (error) {
-            console.log(error);
-            const errorResponse = JSON.parse(error.responseText);
-            console.log(errorResponse)
-            alert("Error: " + errorResponse.message);
-          },
-        });
-      }
-    } else if (action === "Delete account") {
-      if (oldPassword === "") {
-        alert("Vui lòng nhập mật khẩu!");
-        return;
-      }else{
-        const dataToSend = {
-          password: oldPassword,
-        };
-        const jsonString = JSON.stringify(dataToSend, null, 2);
+    // Change buttons
+    $(this)
+      .removeClass("btn-info btn-edit")
+      .addClass("btn-success btn-save btn-primary")
+      .text("Save");
+    $row
+      .find(".btn-delete")
+      .removeClass("btn-danger btn-delete")
+      .addClass("btn-secondary btn-cancel")
+      .text("Cancel");
+  });
 
-        $.ajax({
-          type: "DELETE",
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
-          url: urlForDeleting,
-          data: jsonString,
-          success: function (response) {
-            const message = response.message;
-            if (message == "Success") {
-              alert("Xóa tài khoản thành công");
-              logout();
-              window.location.href = URLIndex;
-            }
-          },
-          error: function (error) {
-            const errorResponse = JSON.parse(error.responseText);
-            alert("Error: " + errorResponse.message);
-          },
-        });
-      }
+  $(document).on("click", ".btn-save", function () {
+    const $row = $(this).closest("tr");
+    const iduser = $row.data("iduser");
+
+    const updatedData = {
+      fullName: $row.find('input[name="fullname"]').val(),
+      email: $row.find('input[name="email"]').val(),
+      phoneNumber: $row.find('input[name="phonenumber"]').val(),
+      address: $row.find('input[name="address"]').val(),
+    };
+
+    updateUser(iduser, updatedData);
+
+    // Restore text cells and buttons
+    $row.find(".td-fullname").text(updatedData.fullname);
+    $row.find(".td-email").text(updatedData.email);
+    $row.find(".td-phonenumber").text(updatedData.phonenumber);
+    $row.find(".td-address").text(updatedData.address);
+
+    $(this)
+      .removeClass("btn-success btn-save btn-primary")
+      .addClass("btn-info btn-edit")
+      .text("Edit");
+    $row
+      .find(".btn-cancel")
+      .removeClass("btn-secondary btn-cancel")
+      .addClass("btn-danger btn-delete")
+      .text("Delete");
+  });
+
+  $(document).on("click", ".btn-cancel", function () {
+    const $row = $(this).closest("tr");
+    const iduser = $row.data("iduser");
+    const user = users.get(iduser + "");
+
+    // Restore text cells
+    $row.find(".td-fullname").text(user.fullname);
+    $row.find(".td-phonenumber").text(user.phonenumber);
+    $row.find(".td-address").text(user.address);
+
+    // Restore buttons
+    $row
+      .find(".btn-save")
+      .removeClass("btn-success btn-save")
+      .addClass("btn-info btn-edit")
+      .text("Edit");
+    $(this)
+      .removeClass("btn-secondary btn-cancel")
+      .addClass("btn-danger btn-delete")
+      .text("Delete");
+  });
+
+  $(document).on("click", ".btn-delete", function () {
+    const iduser = $(this).closest("tr").data("iduser");
+    if (confirm("Are you sure you want to delete this user?")) {
+      deleteUser(iduser);
     }
   });
+
+  // Initialize
+  await fetchUsers();
 });

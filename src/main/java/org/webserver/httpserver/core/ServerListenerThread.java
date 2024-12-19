@@ -14,7 +14,6 @@ import java.util.function.Consumer;
 public class ServerListenerThread extends Thread{
 
     private int port;
-    private String webroot;
     private String localhost;
     private ServerSocket  serverSocket;
     private ServerGUI gui;
@@ -29,7 +28,6 @@ public class ServerListenerThread extends Thread{
 
     public ServerListenerThread(int port, String webroot, String localhost) throws IOException {
         this.port = port;
-        this.webroot = webroot;
         this.localhost = localhost;
         this.serverSocket = new ServerSocket(this.port, 50, InetAddress.getByName(this.localhost));
     }

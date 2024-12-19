@@ -26,6 +26,12 @@ public class HttpServer {
             System.out.println("Index: " + location.getIndex());
         }
 
+        // ============  Print config load balancing   =============
+        Configuration.LoadBalancerConfig lbConfig = config.getLoadBalancer();
+
+        System.out.println("Load Balancing Strategy: " + lbConfig.getStrategy());
+        System.out.println("Backend Servers: " + lbConfig.getBackendServers());
+
         ServerGUI serverGUI = new ServerGUI(config);
 
     }

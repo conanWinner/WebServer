@@ -9,6 +9,7 @@ import org.webserver.httpserver.config.ConfigurationManager;
 import org.webserver.httpserver.entity.User;
 import org.webserver.httpserver.entity.UserUpdate;
 import org.webserver.httpserver.exception.ErrorCode;
+import org.webserver.httpserver.proxy.RequestForwarder;
 import org.webserver.httpserver.repository.UserRepository;
 import org.webserver.httpserver.util.Json;
 import org.webserver.util.FileUtils;
@@ -18,64 +19,187 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class HandlerRequest {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Configuration config = ConfigurationManager.getInstance().getCurrentConfiguration();
 
-    public void handleGetRequest(HttpRequest request, OutputStream outputStream) throws IOException {
+    // =================  Load balancing  ================
+    public void handleRequest(HttpRequest request, OutputStream outputStream) throws IOException {
+        LoadBalancer loadBalancer = new LoadBalancer(Arrays.asList(
+                "http://localhost:8081",
+                "http://localhost:8082",
+                "http://localhost:8083"
+        ));
 
-        String fileName = request.getRequestTarget();
+        // Chọn backend server
+        String backendServer = loadBalancer.getNextServer();
 
-        String path = "";
-        String root = "";
-        String index = "";
+        // Sử dụng RequestForwarder để chuyển tiếp yêu cầu
+        RequestForwarder forwarder = new RequestForwarder();
+        String responseBody;
 
-        for (Configuration.Location location : config.getServer().getLocations()) {
-
-            if (location.getRoot() != null) {
-                path = location.getPath();
-                root = location.getRoot();
-                index = location.getIndex();
+        try {
+            // Phân biệt phương thức HTTP
+            if ("GET".equalsIgnoreCase(request.getMethod().name())) {
+                responseBody = forwarder.forwardRequest(backendServer, "GET", request.getRequestTarget(), null);
+            } else if ("POST".equalsIgnoreCase(request.getMethod().name())) {
+                responseBody = forwarder.forwardRequest(backendServer, "POST", request.getRequestTarget(), null); //null = body
+            } else {
+                // Không hỗ trợ các phương thức khác
+                outputStream.write("HTTP/1.1 405 Method Not Allowed\r\n\r\n<h1>Method Not Allowed</h1>".getBytes());
+                return;
             }
 
-        }
-
-        if (fileName == null || fileName.equals(path)) {
-            fileName = "/" + index;
-        }
-
-        if (FileUtils.exist(root)) {
-            fileName = root + fileName;
-        } else {
-            outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n<h1>File not found!</h1>".getBytes(StandardCharsets.UTF_8));
-            return;
-        }
-
-        // ========= Convert to format 200 OK =============
-        final StringBuilder responseMetadata = new StringBuilder();
-        responseMetadata.append("HTTP/1.1 200 OK\r\n");
-        responseMetadata.append(String.format("Content-Type: %s\r\n", FileUtils.probeContentType(fileName)));
-
-        final InputStream fileStream = FileUtils.getInputStream(fileName);
-        if (fileStream != null) {
-            responseMetadata.append(String.format("Content-Length: %d\r\n", fileStream.available()));
-        }
-        responseMetadata.append("\r\n");
-
-
-        // ===============response to GUI client (just header) ==============
-        outputStream.write(responseMetadata.toString().getBytes(StandardCharsets.UTF_8));
-
-
-        // =============== response to GUI client with body content ===========
-        try (fileStream) {
-            fileStream.transferTo(outputStream);
+            // Trả phản hồi về client
+            outputStream.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+            outputStream.write(responseBody.getBytes());
+        } catch (Exception e) {
+            // Xử lý lỗi nếu backend server gặp vấn đề
+            outputStream.write("HTTP/1.1 500 Internal Server Error\r\n\r\n<h1>Internal Server Error</h1>".getBytes());
         }
     }
+
+    public void handleGetRequest(HttpRequest request, OutputStream outputStream) throws IOException {
+        String requestTarget = request.getRequestTarget();
+
+        if (requestTarget.startsWith("/api/getAllUsers")) {
+            // Phân tích query string
+            String[] parts = requestTarget.split("\\?");
+            String path = parts[0]; // "/users"
+            String queryString = parts.length > 1 ? parts[1] : "";
+            Map<String, String> queryParams = parseQueryString(queryString);
+
+            // Giả lập dữ liệu người dùng
+            Map<String, Map<String, String>> fakeUserData = new HashMap<>();
+            {
+                UserRepository.getAllUsers().forEach(user ->{
+                    Map<String, String> user1 = new HashMap<>();
+                    user1.put("iduser", user.getIduser());
+                    user1.put("fullname", user.getFullName());
+                    user1.put("email", user.getEmail());
+                    user1.put("phonenumber", user.getPhoneNumber());
+                    user1.put("address", user.getAddress());
+                    fakeUserData.put(user.getIduser(), user1);
+                });
+            }
+
+            String userId = queryParams.get("iduser");
+            if (userId != null && fakeUserData.containsKey(userId)) {
+                // Trả về thông tin 1 user
+                Map<String, String> userData = fakeUserData.get(userId);
+                String jsonResponse = "{\n" +
+                        "  \"id\": \"" + userData.get("iduser") + "\",\n" +
+                        "  \"fullname\": \"" + userData.get("fullname") + "\",\n" +
+                        "  \"email\": \"" + userData.get("email") + "\",\n" +
+                        "  \"phonenumber\": \"" + userData.get("phonenumber") + "\",\n" +
+                        "  \"address\": \"" + userData.get("address") + "\"\n" +
+                        "}";
+
+                StringBuilder responseMetadata = new StringBuilder();
+                responseMetadata.append("HTTP/1.1 200 OK\r\n");
+                responseMetadata.append("Content-Type: application/json\r\n");
+                responseMetadata.append("Content-Length: ").append(jsonResponse.getBytes(StandardCharsets.UTF_8).length).append("\r\n");
+                responseMetadata.append("\r\n");
+
+                outputStream.write(responseMetadata.toString().getBytes(StandardCharsets.UTF_8));
+                outputStream.write(jsonResponse.getBytes(StandardCharsets.UTF_8));
+            } else {
+                // Không có id hoặc không tìm thấy userId trong dữ liệu,
+                // ta sẽ trả về tất cả người dùng
+                StringBuilder jsonResponse = new StringBuilder();
+                jsonResponse.append("[\n");
+                int count = 0;
+                for (Map<String, String> user : fakeUserData.values()) {
+                    if (count > 0) jsonResponse.append(",\n");
+                    jsonResponse.append("  {\n")
+                            .append("    \"iduser\": \"").append(user.get("iduser")).append("\",\n")
+                            .append("    \"fullname\": \"").append(user.get("fullname")).append("\",\n")
+                            .append("    \"email\": \"").append(user.get("email")).append("\",\n")
+                            .append("    \"phonenumber\": \"").append(user.get("phonenumber")).append("\",\n")
+                            .append("    \"address\": \"").append(user.get("address")).append("\"\n")
+                            .append("  }");
+                    count++;
+                }
+                jsonResponse.append("\n]");
+
+                String response = jsonResponse.toString();
+                StringBuilder responseMetadata = new StringBuilder();
+                responseMetadata.append("HTTP/1.1 200 OK\r\n");
+                responseMetadata.append("Content-Type: application/json\r\n");
+                responseMetadata.append("Content-Length: ").append(response.getBytes(StandardCharsets.UTF_8).length).append("\r\n");
+                responseMetadata.append("\r\n");
+
+                outputStream.write(responseMetadata.toString().getBytes(StandardCharsets.UTF_8));
+                outputStream.write(response.getBytes(StandardCharsets.UTF_8));
+            }
+        } else {
+            // Code xử lý file tĩnh như cũ
+            String fileName = requestTarget;
+            String path = "";
+            String root = "";
+            String index = "";
+
+            for (Configuration.Location location : config.getServer().getLocations()) {
+                if (location.getRoot() != null) {
+                    path = location.getPath();
+                    root = location.getRoot();
+                    index = location.getIndex();
+                }
+            }
+
+            if (fileName == null || fileName.equals(path)) {
+                fileName = "/" + index;
+            }
+
+            if (FileUtils.exist(root)) {
+                fileName = root + fileName;
+            } else {
+                outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n<h1>File not found!</h1>".getBytes(StandardCharsets.UTF_8));
+                return;
+            }
+
+            final StringBuilder responseMetadata = new StringBuilder();
+            responseMetadata.append("HTTP/1.1 200 OK\r\n");
+            responseMetadata.append(String.format("Content-Type: %s\r\n", FileUtils.probeContentType(fileName)));
+
+            final InputStream fileStream = FileUtils.getInputStream(fileName);
+            if (fileStream != null) {
+                responseMetadata.append(String.format("Content-Length: %d\r\n", fileStream.available()));
+            }
+            responseMetadata.append("\r\n");
+
+            outputStream.write(responseMetadata.toString().getBytes(StandardCharsets.UTF_8));
+
+            try (fileStream) {
+                fileStream.transferTo(outputStream);
+            }
+        }
+    }
+
+    private Map<String, String> parseQueryString(String query) {
+        Map<String, String> queryPairs = new HashMap<>();
+        if (query == null || query.trim().isEmpty()) {
+            return queryPairs;
+        }
+
+        String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            int idx = pair.indexOf("=");
+            if (idx > 0 && idx < pair.length() - 1) {
+                String key = pair.substring(0, idx);
+                String value = pair.substring(idx + 1);
+                queryPairs.put(key, value);
+            }
+        }
+        return queryPairs;
+    }
+
 
 
     public void handlePostRequest(HttpRequest request,
@@ -101,7 +225,7 @@ public class HandlerRequest {
             // Create user
             case "/api/users":
                 // Kiểm tra tồn tại email
-                if (UserRepository.existByEmail(user.getEmail())) {
+                if (UserRepository.existByIduser(user.getIduser())) {
                     errorBody = ErrorCode.EMAIL_EXISTED;
                     sendConflict(clientOs, errorBody);
                     return;
@@ -121,8 +245,8 @@ public class HandlerRequest {
                 // Login user
             case "/api/login":
 //                int iduser = UserRepository.loginUser(user.getEmail(), user.getPassword());
-                if(!UserRepository.existByEmail(user.getEmail())){
-                    errorBody = ErrorCode.EMAIL_NOT_FOUND;
+                if(!UserRepository.existByIduser(user.getIduser())){
+                    errorBody = ErrorCode.USER_NOT_FOUND;
                     sendUnauthorized(clientOs, errorBody);
                     return;
                 }
@@ -152,80 +276,62 @@ public class HandlerRequest {
     }
 
     public void handlePutRequest(HttpRequest request, OutputStream clientOs, InputStream inputStream) throws Exception {
+
         final String body = readBodyContent(request, inputStream);
-        //Data with format JSON
         JsonNode json = Json.parse(body);
         System.out.println("json:   " + json);
 
-        //Convert json => UserUpdate (fullName, oldPassword, newPassword, address, phoneNumber)
         UserUpdate userUpdate = Json.fromJson(json, UserUpdate.class);
 
-        // URL target -> /api/users/email%40gmail.com
+        // URL target -> /api/users/iduser
         String fileName = request.getRequestTarget();
-//        int checkResponse = 0;
         ErrorCode errorBody;
         String body1 = "";
 
 //            Handling Update user's information
-        String emailUser = fileName.substring("api/users/".length()); // Lấy email từ URL
-        emailUser = URLDecoder.decode(emailUser, StandardCharsets.UTF_8).split("/")[1];
+        String iduserStr = fileName.substring("/api/updateUser/".length());
 
-        if (!UserRepository.existByEmail(emailUser)) {
-            errorBody = ErrorCode.EMAIL_NOT_FOUND;
+        if (!UserRepository.existByIduser(iduserStr)) {
+            errorBody = ErrorCode.USER_NOT_FOUND;
             sendNotFound(clientOs, errorBody);
             return;
-        } else if (UserRepository.loginUser(emailUser, userUpdate.getOldPassword()) == null) {
-            errorBody = ErrorCode.WRONG_PASSWORD;
-            sendUnauthorized(clientOs, errorBody);
-            return;
+        }
+
+        if (UserRepository.updateUser(userUpdate, iduserStr)) {
+            body1 = "{\"message\": \"Success\"}";
         } else {
-            boolean checkResponse = UserRepository.updateUser(userUpdate, emailUser);
-            if (checkResponse) {
-                body1 = "{\"message\": \"Success\"}";
-            } else {
-                sendBadRequest(clientOs, ErrorCode.ERROR_UPDATE_USER);
-            }
+            sendBadRequest(clientOs, ErrorCode.ERROR_UPDATE_USER);
         }
 
         sendResponse(clientOs, body1);
     }
 
     public void handleDeleteRequest(HttpRequest request, OutputStream clientOs, InputStream inputStream) throws Exception {
-        final String body = readBodyContent(request, inputStream);
-        //Data with format JSON
-        JsonNode json = Json.parse(body);
-        System.out.println("json:   " + json);
-
-        //Convert json => User (password)
-        User user = Json.fromJson(json, User.class);
 
         // URL target
         String fileName = request.getRequestTarget();
+        String iduserStr = fileName.substring("/api/users/".length());
+        int iduser = Integer.parseInt(URLDecoder.decode(iduserStr, StandardCharsets.UTF_8));
         ErrorCode errorBody;
-        String body1 = "";
 
-//            Handling Delete user's information
-        String emailUser = fileName.substring("api/users/".length()); // Lấy email từ URL
-        emailUser = URLDecoder.decode(emailUser, StandardCharsets.UTF_8).split("/")[1];
-
-        if (!UserRepository.existByEmail(emailUser)) {
-            errorBody = ErrorCode.EMAIL_NOT_FOUND;
+// Kiểm tra iduser
+        if (!UserRepository.existByIduser(iduserStr)) {
+            errorBody = ErrorCode.USER_NOT_FOUND;
             sendNotFound(clientOs, errorBody);
             return;
-        }   else if (UserRepository.loginUser(emailUser, user.getPassword()) == null) {
-            errorBody = ErrorCode.WRONG_PASSWORD;
-            sendUnauthorized(clientOs, errorBody);
-            return;
-        } else {
-            boolean checkResponse = UserRepository.deleteUser(emailUser);
-            if (checkResponse) {
-                body1 = "{\"message\": \"Success\"}";
-            } else {
-                sendBadRequest(clientOs, ErrorCode.ERROR_DELETE_USER);
-            }
         }
 
-        sendResponse(clientOs, body1);
+// Thực hiện xóa
+        if (!UserRepository.deleteUser(iduser)) {
+            errorBody = ErrorCode.ERROR_DELETE_USER;
+            sendBadRequest(clientOs, errorBody);
+            return;
+        }
+
+// Gửi phản hồi thành công
+        String responseBody = "{\"message\": \"Success\"}";
+        sendResponse(clientOs, responseBody);
+
     }
 
 

@@ -16,5 +16,13 @@
     ],
     "errorLog": "/var/log/server/error.log",
     "accessLog": "/var/log/server/access.log"
+  },
+  "loadBalancer": {
+    "strategy": "RoundRobin",
+    "backendServers": [
+      "http://localhost:8081",
+      "http://localhost:8082",
+      "http://localhost:8083"
+    ]
   }
 }
