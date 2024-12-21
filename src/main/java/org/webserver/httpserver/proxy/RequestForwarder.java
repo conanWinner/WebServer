@@ -16,7 +16,7 @@ public class RequestForwarder {
      * @return Response body from the backend server
      * @throws IOException If an error occurs during forwarding
      */
-    public String forwardRequest(String backendUrl, String method, String path, String body) throws IOException {
+    public static String forwardRequest(String backendUrl, String method, String path, String body) throws IOException {
         // Tạo URL đầy đủ từ backend URL và path
         URL url = new URL(backendUrl + path);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

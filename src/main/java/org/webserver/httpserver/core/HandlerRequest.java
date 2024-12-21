@@ -21,6 +21,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,41 +30,8 @@ public class HandlerRequest {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Configuration config = ConfigurationManager.getInstance().getCurrentConfiguration();
 
-    // =================  Load balancing  ================
-    public void handleRequest(HttpRequest request, OutputStream outputStream) throws IOException {
-        LoadBalancer loadBalancer = new LoadBalancer(Arrays.asList(
-                "http://localhost:8081",
-                "http://localhost:8082",
-                "http://localhost:8083"
-        ));
-
-        // Chọn backend server
-        String backendServer = loadBalancer.getNextServer();
-
-        // Sử dụng RequestForwarder để chuyển tiếp yêu cầu
-        RequestForwarder forwarder = new RequestForwarder();
-        String responseBody;
-
-        try {
-            // Phân biệt phương thức HTTP
-            if ("GET".equalsIgnoreCase(request.getMethod().name())) {
-                responseBody = forwarder.forwardRequest(backendServer, "GET", request.getRequestTarget(), null);
-            } else if ("POST".equalsIgnoreCase(request.getMethod().name())) {
-                responseBody = forwarder.forwardRequest(backendServer, "POST", request.getRequestTarget(), null); //null = body
-            } else {
-                // Không hỗ trợ các phương thức khác
-                outputStream.write("HTTP/1.1 405 Method Not Allowed\r\n\r\n<h1>Method Not Allowed</h1>".getBytes());
-                return;
-            }
-
-            // Trả phản hồi về client
-            outputStream.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
-            outputStream.write(responseBody.getBytes());
-        } catch (Exception e) {
-            // Xử lý lỗi nếu backend server gặp vấn đề
-            outputStream.write("HTTP/1.1 500 Internal Server Error\r\n\r\n<h1>Internal Server Error</h1>".getBytes());
-        }
-    }
+    // Lấy danh sách backend servers từ cấu hình
+    private LoadBalancer loadBalancer = LoadBalancer.getInstance(config.getLoadBalancer().getBackendServers());
 
     public void handleGetRequest(HttpRequest request, OutputStream outputStream) throws IOException {
         String requestTarget = request.getRequestTarget();
@@ -139,8 +107,32 @@ public class HandlerRequest {
                 outputStream.write(responseMetadata.toString().getBytes(StandardCharsets.UTF_8));
                 outputStream.write(response.getBytes(StandardCharsets.UTF_8));
             }
+        } else if (requestTarget.startsWith("/api/loadBalancing")) {
+
+            // Chọn backend server tiếp theo
+            String backendUrl = loadBalancer.getNextServer();
+            System.out.println("=================> Forwarding to: ... " + backendUrl);
+
+            // Chuyển tiếp yêu cầu đến backend server
+            try {
+                String backendResponse = RequestForwarder.forwardRequest(backendUrl, "GET", "/", "");
+
+                // Trả phản hồi từ backend server về client
+                StringBuilder responseMetadata = new StringBuilder();
+                responseMetadata.append("HTTP/1.1 200 OK\r\n");
+                responseMetadata.append("Content-Type: application/json\r\n");
+                responseMetadata.append("Content-Length: ").append(backendResponse.getBytes(StandardCharsets.UTF_8).length).append("\r\n");
+                responseMetadata.append("\r\n");
+
+                outputStream.write(responseMetadata.toString().getBytes(StandardCharsets.UTF_8));
+                outputStream.write(backendResponse.getBytes(StandardCharsets.UTF_8));
+            } catch (Exception e) {
+                // Xử lý lỗi từ backend server
+                outputStream.write("HTTP/1.1 500 Internal Server Error\r\n\r\n<h1>Failed to load balance request</h1>".getBytes(StandardCharsets.UTF_8));
+            }
+
         } else {
-            // Code xử lý file tĩnh như cũ
+            // Code xử lý file tĩnh
             String fileName = requestTarget;
             String path = "";
             String root = "";

@@ -4,22 +4,32 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoadBalancer {
-
+    private static LoadBalancer instance;
     private final List<String> servers; // Danh sách các backend servers
-    private final AtomicInteger currentIndex = new AtomicInteger(0);
+    private AtomicInteger currentIndex = new AtomicInteger(0);
+
 
     public LoadBalancer(List<String> servers) {
         this.servers = servers;
     }
 
+    public static synchronized LoadBalancer getInstance(List<String> servers) {
+        if (instance == null) {
+            instance = new LoadBalancer(servers);
+        }
+        return instance;
+    }
+
     // Round Robin Strategy
-    public String getNextServer() {
+    public synchronized String getNextServer() {
         if (servers.isEmpty()) {
             throw new RuntimeException("No backend servers available.");
         }
         int index = currentIndex.getAndUpdate(i -> (i + 1) % servers.size());
+        System.out.println("Selected server index: " + index);
         return servers.get(index);
     }
+
 
     // Least Connections Strategy (cần thêm số kết nối cho từng server)
     public String getLeastConnections(Map<String, Integer> connections) {
