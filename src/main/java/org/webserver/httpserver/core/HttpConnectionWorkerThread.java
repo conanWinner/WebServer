@@ -16,9 +16,11 @@ import java.nio.charset.StandardCharsets;
 public class HttpConnectionWorkerThread extends Thread{
 
     private Socket socket;
+    private final boolean isHttps;
 
-    public HttpConnectionWorkerThread(Socket socket) {
+    public HttpConnectionWorkerThread(Socket socket, boolean isHttps) {
         this.socket = socket;
+        this.isHttps = isHttps;
     }
 
     @Override
@@ -28,10 +30,19 @@ public class HttpConnectionWorkerThread extends Thread{
         OutputStream os = null;
         HttpParser httpParser = new HttpParser();
 
-
         try {
             is = socket.getInputStream();
             os = socket.getOutputStream();
+
+            // Nếu là HTTPS, thực hiện SSL handshake
+            if (isHttps) {
+                if (!(socket instanceof javax.net.ssl.SSLSocket)) {
+                    throw new RuntimeException("Non-SSL connection received on HTTPS port.");
+                }
+                javax.net.ssl.SSLSocket sslSocket = (javax.net.ssl.SSLSocket) socket;
+                sslSocket.startHandshake();
+                System.out.println("SSL Handshake successful");
+            }
 
             // read data from web => saving in lineBuilder
             final StringBuilder lineBuilder = new StringBuilder();
@@ -56,8 +67,6 @@ public class HttpConnectionWorkerThread extends Thread{
                     wasNewLine = false;
                 }
             }
-
-            System.out.println("+=====+++++++++++++++  \n" + lineBuilder);
 
             // parse data from lineBuilder
             InputStream data = new ByteArrayInputStream(
@@ -121,8 +130,5 @@ public class HttpConnectionWorkerThread extends Thread{
                 }
             } catch (IOException ignored) {}
         }
-
-
-
     }
 }

@@ -18,46 +18,45 @@ public class Configuration {
         return loadBalancer;
     }
 
-    public void setLoadBalancer(LoadBalancerConfig loadBalancer) {
-        this.loadBalancer = loadBalancer;
-    }
-
     public static class ServerConfig {
         private int listen;
         private String serverName;
-        private String webroot;
+        private SSL  ssl;
         private List<Location> locations;
 
         public int getListen() {
             return listen;
         }
-
-        public void setListen(int listen) {
-            this.listen = listen;
-        }
-
+        public SSL  getSsl() {  return ssl; }
         public String getServerName() {
             return serverName;
-        }
-
-        public void setServerName(String serverName) {
-            this.serverName = serverName;
-        }
-
-        public String getWebroot() {
-            return webroot;
-        }
-
-        public void setWebroot(String webroot) {
-            this.webroot = webroot;
         }
 
         public List<Location> getLocations() {
             return locations;
         }
 
-        public void setLocations(List<Location> locations) {
-            this.locations = locations;
+    }
+
+    public static class SSL {
+        private boolean enabled;
+        private String port;
+        private String keystore;
+        private String keystorePassword;
+        public boolean getEnabled() {
+            return enabled;
+        }
+
+        public String getPort() {
+            return port;
+        }
+
+        public String getKeystore() {
+            return keystore;
+        }
+
+        public String getKeystorePassword() {
+            return keystorePassword;
         }
     }
 
@@ -70,17 +69,11 @@ public class Configuration {
             return path;
         }
 
-        public void setPath(String path) {
-            this.path = path;
-        }
 
         public String getRoot() {
             return root;
         }
 
-        public void setRoot(String root) {
-            this.root = root;
-        }
 
         public String getIndex() {
             return index;
@@ -100,16 +93,9 @@ public class Configuration {
             return strategy;
         }
 
-        public void setStrategy(String strategy) {
-            this.strategy = strategy;
-        }
-
         public List<String> getBackendServers() {
             return backendServers;
         }
 
-        public void setBackendServers(List<String> backendServers) {
-            this.backendServers = backendServers;
-        }
     }
 }

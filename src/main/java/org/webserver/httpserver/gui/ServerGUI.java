@@ -12,7 +12,9 @@ import java.awt.event.ActionListener;
 import java.util.Set;
 
 public class ServerGUI {
-    private ServerListenerThread serverListener;
+    private ServerListenerThread httpServerListener;
+    private ServerListenerThread httpsServerListener;
+
     private Configuration conf;
     private Set<String> setBlackList = ServerListenerThread.setBlackList;
 
@@ -109,29 +111,57 @@ public class ServerGUI {
     private void startServer() {
         new Thread(() -> {
             try {
-                logArea.append("Starting server...\n");
+                logArea.append("Starting HTTP server...\n");
                 startButton.setEnabled(false);
                 stopButton.setEnabled(true);
 
-                serverListener = new ServerListenerThread(conf.getServer().getListen(), conf.getServer().getWebroot(), conf.getServer().getServerName());
-                serverListener.setConnectionCountCallback(this::GUIupdateConnectionCount);
-                serverListener.setConnectionListCallback(this::GUIaddActiveUser);
-                serverListener.start();
+                // HTTP Server
+                httpServerListener = new ServerListenerThread(
+                        conf.getServer().getListen(),
+                        conf.getServer().getServerName(),
+                        false
+                );
+                httpServerListener.setConnectionCountCallback(this::GUIupdateConnectionCount);
+                httpServerListener.setConnectionListCallback(this::GUIaddActiveUser);
+                httpServerListener.start();
 
+                logArea.append("HTTP server started on port " + conf.getServer().getListen() + "\n");
+
+                // HTTPS Server
+                if (conf.getServer().getSsl().getEnabled()) {
+                    int httpsPort = Integer.parseInt(conf.getServer().getSsl().getPort());
+                    httpsServerListener = new ServerListenerThread(
+                            httpsPort,
+                            conf.getServer().getServerName(),
+                            true
+                    );
+                    httpsServerListener.start();
+
+                    logArea.append("HTTPS server started on port " + httpsPort + "\n");
+                }
             } catch (Exception ex) {
                 logArea.append("Failed to start server: " + ex.getMessage() + "\n");
+                ex.printStackTrace();
             }
         }).start();
     }
 
+
     private void stopServer() {
         logArea.append("Stopping server...\n");
-        if (serverListener != null) {
-            serverListener.stopServer();
+
+        if (httpServerListener != null) {
+            httpServerListener.stopServer();
         }
+
+        if (httpsServerListener != null) {
+            httpsServerListener.stopServer();
+        }
+
         startButton.setEnabled(true);
         stopButton.setEnabled(false);
     }
+
 
     // Cập nhật số lượng kết nối
     public void GUIupdateConnectionCount(int count) {

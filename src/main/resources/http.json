@@ -1,8 +1,15 @@
 {
   "server": {
     "listen": 8080,
+    "ssl":
+      {
+        "enabled": true,
+        "port": 443,
+        "keystore": "selfsigned.jks",
+        "keystorePassword": "password"
+      }
+    ,
     "serverName": "localhost",
-    "webroot": "WebRoot",
     "locations": [
       {
         "path": "/",

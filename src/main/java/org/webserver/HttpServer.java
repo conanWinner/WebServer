@@ -26,6 +26,13 @@ public class HttpServer {
             System.out.println("Index: " + location.getIndex());
         }
 
+        //ssl
+            System.out.println("enable: " + config.getServer().getSsl().getEnabled());
+            System.out.println("port: " + config.getServer().getSsl().getPort());
+            System.out.println("keystore: " + config.getServer().getSsl().getKeystore());
+            System.out.println("keystorePassword: " + config.getServer().getSsl().getKeystorePassword());
+
+
         // ============  Print config load balancing   =============
         Configuration.LoadBalancerConfig lbConfig = config.getLoadBalancer();
 

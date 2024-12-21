@@ -132,6 +132,7 @@ public class HandlerRequest {
                 StringBuilder responseMetadata = new StringBuilder();
                 responseMetadata.append("HTTP/1.1 200 OK\r\n");
                 responseMetadata.append("Content-Type: application/json\r\n");
+                responseMetadata.append("Access-Control-Allow-Origin: *\r\n");
                 responseMetadata.append("Content-Length: ").append(response.getBytes(StandardCharsets.UTF_8).length).append("\r\n");
                 responseMetadata.append("\r\n");
 
@@ -244,12 +245,6 @@ public class HandlerRequest {
 
                 // Login user
             case "/api/login":
-//                int iduser = UserRepository.loginUser(user.getEmail(), user.getPassword());
-                if(!UserRepository.existByIduser(user.getIduser())){
-                    errorBody = ErrorCode.USER_NOT_FOUND;
-                    sendUnauthorized(clientOs, errorBody);
-                    return;
-                }
 
                 User userR = UserRepository.loginUser(user.getEmail(), user.getPassword());
                 Map<String, Object> bodyMap = new HashMap<>();
