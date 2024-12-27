@@ -52,13 +52,13 @@ public class CreateWebServiceGUI extends javax.swing.JFrame {
         txtPort = new javax.swing.JTextField();
         btnUploadFile = new javax.swing.JButton();
         btnConfirm = new javax.swing.JButton();
+        txtUploadFile = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
             }
-
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
@@ -80,12 +80,11 @@ public class CreateWebServiceGUI extends javax.swing.JFrame {
         jLabel5.setText("Deploy source:");
 
         txtDomainName.setEditable(false);
-        txtDomainName.setText("*.hosting.com");
+        txtDomainName.setText("*.vinahost.online");
 
-        txtPort.setEditable(false);
-        txtPort.setText("81");
+        txtPort.setEditable(true);
+//        txtPort.setText("81");
 
-        btnUploadFile.setText("Upload file");
         btnUploadFile.setText("Upload file");
         btnUploadFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,16 +129,18 @@ public class CreateWebServiceGUI extends javax.swing.JFrame {
                                                                                 .addComponent(txtPort)))
                                                                 .addGap(18, 18, 18)
                                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                        .addComponent(txtSubdomain, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                         .addGroup(layout.createSequentialGroup()
                                                                                 .addComponent(jLabel5)
                                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                .addComponent(btnUploadFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                                        .addComponent(txtSubdomain, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(txtUploadFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                        .addComponent(btnUploadFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                                                 .addGap(2, 2, 2))))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap(159, 159, 159)
                                                 .addComponent(btnConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addContainerGap(34, Short.MAX_VALUE))
+                                .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,12 +164,14 @@ public class CreateWebServiceGUI extends javax.swing.JFrame {
                                                 .addComponent(jLabel4)
                                                 .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(jLabel5)))
-                                .addGap(36, 36, 36)
-                                .addComponent(btnConfirm, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtUploadFile)
+                                .addGap(24, 24, 24)
+                                .addComponent(btnConfirm, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
                                 .addGap(38, 38, 38))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[]{txtDomainName, txtPort, txtServiceName, txtSubdomain});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtDomainName, txtPort, txtServiceName, txtSubdomain});
 
         pack();
     }// </editor-fold>
@@ -193,44 +196,42 @@ public class CreateWebServiceGUI extends javax.swing.JFrame {
         if (Objects.equals(serviceName, "") || Objects.equals(subDomain, "") || Objects.equals(port, "") || Objects.equals(fileUpload, null)) {
             javax.swing.JOptionPane.showMessageDialog(null, "Error", "There are empty fields", javax.swing.JOptionPane.ERROR_MESSAGE);
         } else {
-            if (Objects.equals(serviceName, subDomain)) {
-                ObjectMapper mapper = new ObjectMapper();
 
-                CreateWebServiceRequest createWebServiceRequest = new CreateWebServiceRequest(serviceName, port, subDomain, username);
-                ApiConstructor<CreateWebServiceRequest> api = new ApiConstructor<>("create webservice", createWebServiceRequest);
-                String jsonRequest = mapper.writeValueAsString(api);
-                System.out.println("json gửi trước: " + jsonRequest);
-                client.getOut().write(jsonRequest.getBytes(StandardCharsets.UTF_8));
-                client.getOut().flush();
+            ObjectMapper mapper = new ObjectMapper();
+
+            CreateWebServiceRequest createWebServiceRequest = new CreateWebServiceRequest(serviceName, port, subDomain, username);
+            ApiConstructor<CreateWebServiceRequest> api = new ApiConstructor<>("create webservice", createWebServiceRequest);
+            String jsonRequest = mapper.writeValueAsString(api);
+            System.out.println("json gửi trước: " + jsonRequest);
+            client.getOut().write(jsonRequest.getBytes(StandardCharsets.UTF_8));
+            client.getOut().flush();
 
 //            Gửi file
-                byte[] fileData = Files.readAllBytes(Paths.get(fileUpload.getAbsolutePath()));
-                DataOutputStream out = new DataOutputStream(client.getOut());
-                out.writeLong(fileData.length);
-                out.write(fileData);
+            byte[] fileData = Files.readAllBytes(Paths.get(fileUpload.getAbsolutePath()));
+            DataOutputStream out = new DataOutputStream(client.getOut());
+            out.writeLong(fileData.length);
+            out.write(fileData);
 
 //                RESPONSE
-                byte[] buffer = new byte[1024];
-                int bytesRead = client.getIn().read(buffer);
-                String jsonResponse = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);
+            byte[] buffer = new byte[1024];
+            int bytesRead = client.getIn().read(buffer);
+            String jsonResponse = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);
 //            JSON => Text
-                JsonNode rootNode = mapper.readTree(jsonResponse);
-                String message = rootNode.get("message").asText();
-                if(Objects.equals(message, "Success")){
-                    JOptionPane.showMessageDialog(this, "Creating a successful web service", "Information!", JOptionPane.INFORMATION_MESSAGE);
-                    this.setVisible(false);
-                    this.webServiceGUI.setEnabled(true);
-                    this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-                    this.dispose();
-                }else{
-                    txtServiceName.setText("");
-                    txtSubdomain.setText("");
-                    txtPort.setText("");
-                    JOptionPane.showMessageDialog(null, "Creating a web service is failed!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+            JsonNode rootNode = mapper.readTree(jsonResponse);
+            String message = rootNode.get("message").asText();
+            if (Objects.equals(message, "Success")) {
+                JOptionPane.showMessageDialog(this, "Creating a successful web service", "Information!", JOptionPane.INFORMATION_MESSAGE);
+                this.setVisible(false);
+                this.webServiceGUI.setEnabled(true);
+                this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                this.dispose();
             } else {
-                javax.swing.JOptionPane.showMessageDialog(null, "Error", "Service name and Subdomain must be similar", javax.swing.JOptionPane.ERROR_MESSAGE);
+                txtServiceName.setText("");
+                txtSubdomain.setText("");
+                txtPort.setText("");
+                JOptionPane.showMessageDialog(null, "Creating a web service is failed!", "Error", JOptionPane.ERROR_MESSAGE);
             }
+
         }
     }
 
@@ -240,65 +241,11 @@ public class CreateWebServiceGUI extends javax.swing.JFrame {
         boolean action = chooser.showOpenDialog(this);
         if (action) {
             fileUpload = chooser.getSelectedFile();
+            String fileName = fileUpload.getName();
+            txtUploadFile.setText(fileName);
         }
     }
 
-
-//    public static void sendFileInChunks(String serviceName, String port, String subDomain, String username, File file, OutputStream clientOut) throws IOException {
-//        byte[] fileBytes = Files.readAllBytes(file.toPath());
-//        int chunkSize = (1024 * 2);  // 2K mỗi phần
-//        int totalChunks = (int) Math.ceil((double) fileBytes.length / chunkSize);
-//        ObjectMapper mapper = new ObjectMapper();
-//
-////        Gửi phần đầu để báo hiệu
-//        CreateWebServiceRequest createWebServiceRequest = new CreateWebServiceRequest(serviceName, port, subDomain, totalChunks, username);
-//        ApiConstructor<CreateWebServiceRequest> api = new ApiConstructor<>("create webservice", createWebServiceRequest);
-//        String jsonRequest = mapper.writeValueAsString(api);
-//        System.out.println("json gửi trước: " + jsonRequest);
-//        clientOut.write(jsonRequest.getBytes(StandardCharsets.UTF_8));
-//        clientOut.flush();
-//        Map<Integer, byte[]> chunks = new TreeMap<>();
-////        Gửi nội dung file
-//        for (int i = 0; i < totalChunks; i++) {
-//            int start = i * chunkSize;
-//            int end = Math.min(start + chunkSize, fileBytes.length);
-//            byte[] chunk = Arrays.copyOfRange(fileBytes, start, end);
-//
-//            // Mã hóa Base64
-//            Base64 Base64 = null;
-//            String chunkBase64 = Base64.getEncoder().encodeToString(chunk);
-//            byte[] chunkd = Base64.getDecoder().decode(chunkBase64);
-//
-//            // Gửi mỗi phần dưới dạng JSON
-//            FileContentRequest fileContentRequest = new FileContentRequest(i + 1, chunkBase64);
-//            ApiConstructor<FileContentRequest> apiConstructor = new ApiConstructor<>("file content", fileContentRequest);
-//            String fileContentJsonRequest = mapper.writeValueAsString(apiConstructor);
-//
-//            System.out.println("json Request part " + (i + 1) + ": " + fileContentJsonRequest);
-//            chunks.put(i + 1, chunkd);
-//
-//
-//            clientOut.write((fileContentJsonRequest + "\n").getBytes(StandardCharsets.UTF_8));
-//            clientOut.flush();
-//        }
-//
-//        // Mở file đầu ra để ghi
-//        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("src/main/resources/truongcongly/" + serviceName + ".jar"))) {
-//            // Duyệt qua các phần tử trong TreeMap theo thứ tự tăng dần của khóa (Integer)
-//            for (Map.Entry<Integer, byte[]> entry : chunks.entrySet()) {
-//                byte[] chunkData = entry.getValue();
-//                // Ghi từng phần dữ liệu vào file
-//                bos.write(chunkData);
-//            }
-//        }
-//
-////         Gửi chuỗi "EOF" để báo hiệu kết thúc gửi file
-//        ApiConstructor<String> apiConstructor = new ApiConstructor<>("End Of File", "EOF");
-//        String eof = mapper.writeValueAsString(apiConstructor);
-//        clientOut.write((eof + "\n").getBytes(StandardCharsets.UTF_8));
-//        clientOut.flush();
-//        System.out.println(eof);
-//    }
 
 
     // Variables declaration - do not modify
@@ -313,5 +260,6 @@ public class CreateWebServiceGUI extends javax.swing.JFrame {
     private javax.swing.JTextField txtPort;
     private javax.swing.JTextField txtServiceName;
     private javax.swing.JTextField txtSubdomain;
+    private javax.swing.JLabel txtUploadFile;
     // End of variables declaration
 }

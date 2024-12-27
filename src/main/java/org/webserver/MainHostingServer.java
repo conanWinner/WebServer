@@ -16,7 +16,7 @@ public class MainHostingServer {
             Client client = new Client(conf);
             new LoginGUI(client);
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
 
     }

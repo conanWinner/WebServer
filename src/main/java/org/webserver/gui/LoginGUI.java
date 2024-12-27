@@ -33,7 +33,7 @@ public class LoginGUI extends JFrame {
         initComponents();
         this.setVisible(true);
         this.client = client;
-        this.setTitle("MyHosting");
+        this.setTitle("VinaHost");
     }
 
 
@@ -67,7 +67,7 @@ public class LoginGUI extends JFrame {
         jLabel1.setFont(new Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setForeground(new Color(0, 0, 255));
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel1.setText("Welcome to MyHosting");
+        jLabel1.setText("Welcome to VinaHost");
 
         jLabel2.setText("Username:");
 

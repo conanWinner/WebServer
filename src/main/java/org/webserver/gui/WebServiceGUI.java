@@ -1,13 +1,19 @@
 package org.webserver.gui;
 
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.webserver.core.Client;
 import org.webserver.dto.ApiConstructor;
+import org.webserver.dto.request.ActiveRequest;
+import org.webserver.dto.request.LoginRequest;
+import org.webserver.dto.request.StopRequest;
 import org.webserver.dto.request.WebServiceRequest;
 import org.webserver.dto.response.WebServiceResponse;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -17,6 +23,9 @@ public class WebServiceGUI extends javax.swing.JFrame {
     private Client client;
     private String username;
     private ObjectMapper mapper;
+    private String subDomain = "";
+    private String status = "";
+    private int selectedRowIndex;
 
     /**
      * Creates new form WebServiceGUI
@@ -29,8 +38,10 @@ public class WebServiceGUI extends javax.swing.JFrame {
         this.username = username;
         this.mapper = new ObjectMapper();
         lbUsername.setText(username.toUpperCase());
+        getAllData();
+    }
 
-
+    private void getAllData() {
         ApiConstructor<WebServiceRequest> apiConstructor = new ApiConstructor<>("get all webservices", new WebServiceRequest(username));
 
         try {
@@ -89,11 +100,17 @@ public class WebServiceGUI extends javax.swing.JFrame {
         tbWebService = new javax.swing.JTable();
         btnActive = new javax.swing.JButton();
         lbUsername = new javax.swing.JLabel();
+        btnRefresh = new javax.swing.JButton();
+        btnStop = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
+            }
+
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -127,11 +144,35 @@ public class WebServiceGUI extends javax.swing.JFrame {
                 return canEdit[columnIndex];
             }
         });
+        tbWebService.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbWebServiceMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbWebService);
 
         btnActive.setText("Active");
+        btnActive.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActiveActionPerformed(evt);
+            }
+        });
 
         lbUsername.setText("Truong Cong Ly");
+
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+
+        btnStop.setText("Stop");
+        btnStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStopActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -145,9 +186,13 @@ public class WebServiceGUI extends javax.swing.JFrame {
                                                 .addComponent(btnNewWebService)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(btnActive, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(lbUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(16, 16, 16)
                                                 .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap())
         );
@@ -159,7 +204,9 @@ public class WebServiceGUI extends javax.swing.JFrame {
                                         .addComponent(btnNewWebService, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(btnActive, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lbUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(lbUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -167,6 +214,48 @@ public class WebServiceGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>
+
+    private void btnStopActionPerformed(ActionEvent evt) {
+        if (!Objects.equals(subDomain, "")) {
+            if(!Objects.equals(status, "Stopped")){
+                ApiConstructor<StopRequest> apiConstructor = new ApiConstructor<>("stop webservice", new StopRequest(subDomain));
+
+                try {
+//            Chuyển đổi sang JSON
+                    ObjectMapper mapper = new ObjectMapper();
+                    String jsonRequest = mapper.writeValueAsString(apiConstructor);
+                    client.getOut().write(jsonRequest.getBytes(StandardCharsets.UTF_8));
+                    client.getOut().flush();
+
+//            RESPONSE
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = client.getIn().read(buffer);
+                    String jsonResponse = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);
+//            JSON => Text
+                    JsonNode rootNode = mapper.readTree(jsonResponse);
+                    String message = rootNode.get("message").asText();
+                    if(Objects.equals(message, "Success")){
+                        // Cập nhật cột "Status" thành "Stopped" trong JTable
+                        DefaultTableModel model = (DefaultTableModel) tbWebService.getModel();
+                        model.setValueAt("Stopped", selectedRowIndex, 1);  // Cập nhật giá trị cột Status (cột thứ 1) thành "Stopped"
+                        JOptionPane.showMessageDialog(this, "Web service has been stopped", "Information", JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Stop failed!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }else{
+                JOptionPane.showMessageDialog(this, "Your web service is STOPPED", "Information!", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please, choose a web service you want to stop", "Information!", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void btnRefreshActionPerformed(ActionEvent evt) {
+        getAllData();
+    }
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {
         // TODO add your handling code here:
@@ -179,7 +268,41 @@ public class WebServiceGUI extends javax.swing.JFrame {
     }
 
     private void btnActiveActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        if (!Objects.equals(subDomain, "")) {
+            if(!Objects.equals(status, "Running")){
+                ApiConstructor<ActiveRequest> apiConstructor = new ApiConstructor<>("active webservice", new ActiveRequest(subDomain));
+
+                try {
+//            Chuyển đổi sang JSON
+                    ObjectMapper mapper = new ObjectMapper();
+                    String jsonRequest = mapper.writeValueAsString(apiConstructor);
+                    client.getOut().write(jsonRequest.getBytes(StandardCharsets.UTF_8));
+                    client.getOut().flush();
+
+//            RESPONSE
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = client.getIn().read(buffer);
+                    String jsonResponse = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);
+//            JSON => Text
+                    JsonNode rootNode = mapper.readTree(jsonResponse);
+                    String message = rootNode.get("message").asText();
+                    if(Objects.equals(message, "Success")){
+                        // Cập nhật cột "Status" thành "Running" trong JTable
+                        DefaultTableModel model = (DefaultTableModel) tbWebService.getModel();
+                        model.setValueAt("Running", selectedRowIndex, 1);  // Cập nhật giá trị cột Status (cột thứ 1) thành "Running"
+                        JOptionPane.showMessageDialog(this, "Web service has been activated and is now Running", "Information", JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Active failed!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }else{
+                JOptionPane.showMessageDialog(this, "Your web service is RUNNING", "Information!", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please, choose a web service you want to active", "Information!", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {
@@ -193,7 +316,12 @@ public class WebServiceGUI extends javax.swing.JFrame {
     }
 
     private void tbWebServiceMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        if (evt.getClickCount() == 1 && tbWebService.getSelectedRow() != -1) {
+            DefaultTableModel model = (DefaultTableModel) tbWebService.getModel();
+            selectedRowIndex = tbWebService.getSelectedRow();
+            subDomain = model.getValueAt(selectedRowIndex, 4).toString();
+            status = model.getValueAt(selectedRowIndex, 1).toString();
+        }
     }
 
 
@@ -201,6 +329,8 @@ public class WebServiceGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnActive;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnNewWebService;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnStop;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbUsername;
     private javax.swing.JTable tbWebService;
